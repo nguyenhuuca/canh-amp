@@ -1,0 +1,7 @@
+task: Canh Amp - retro MP3 player Android app
+status: in_progress
+progress: 8
+done: SCOPE PRD-retro-player (Q1,Q4,Q5 answered) + Stitch screenshots
+next: owner approves PRD; /spec + ADRs A1-A4; GitHub repo URL before first push
+plan: docs/prd/PRD-retro-player.md
+updated: 2026-11-18 19:38
