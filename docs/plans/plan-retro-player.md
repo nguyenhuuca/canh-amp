@@ -1,6 +1,6 @@
 # Plan: Canh Amp, retro MP3 player
 
-**Status:** Draft · **Date:** 2026-11-18 · **Inputs:** [PRD](../prd/PRD-retro-player.md), [spec](../specs/spec-retro-player.md), [sequences](../sequence/sequence-retro-player.md), ADR [0001](../adr/0001-audio-dsp-pipeline.md) [0002](../adr/0002-visualizer-pcm-tap.md) [0003](../adr/0003-persistence-room-datastore.md) [0004](../adr/0004-app-id-sdk-and-ci-signing.md), design specs `docs/specs/design-spec-*.md`
+**Status:** In progress · **Date:** 2026-11-18 · **Inputs:** [PRD](../prd/PRD-retro-player.md), [spec](../specs/spec-retro-player.md), [sequences](../sequence/sequence-retro-player.md), ADR [0001](../adr/0001-audio-dsp-pipeline.md) [0002](../adr/0002-visualizer-pcm-tap.md) [0003](../adr/0003-persistence-room-datastore.md) [0004](../adr/0004-app-id-sdk-and-ci-signing.md), design specs `docs/specs/design-spec-*.md`
 
 ## Goal
 

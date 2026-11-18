@@ -3,10 +3,10 @@
 ## Canh Amp v0.1.0 ([plan](docs/plans/plan-retro-player.md))
 
 ### M1: skeleton, CI, design system
-- [ ] T1 Gradle project skeleton
-- [ ] T2 CI workflows and guard checks
-- [ ] T3 Theme tokens and 4 palettes
-- [ ] T4 Deck components I
+- [x] T1 Gradle project skeleton 4e87c45
+- [x] T2 CI workflows and guard checks 455b9ec
+- [x] T3 Theme tokens and 4 palettes c59cb1d
+- [~] T4 Deck components I
 - [ ] T5 App shell and navigation
 
 ### M2: library and playback
