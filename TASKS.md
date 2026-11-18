@@ -6,8 +6,8 @@
 - [x] T1 Gradle project skeleton 4e87c45
 - [x] T2 CI workflows and guard checks 455b9ec
 - [x] T3 Theme tokens and 4 palettes c59cb1d
-- [~] T4 Deck components I
-- [ ] T5 App shell and navigation
+- [x] T4 Deck components I 6d8c8f0
+- [x] T5 App shell and navigation 8d4e7c5
 
 ### M2: library and playback
 - [ ] T6 Persistence layer (Room v1 + DataStore)

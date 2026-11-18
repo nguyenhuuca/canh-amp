@@ -1,8 +1,7 @@
 task: Canh Amp - retro MP3 player Android app
 status: in_progress
-progress: 25
-done: T1 Gradle skeleton 4e87c45; T2 CI + guard 455b9ec; T3 theme + palettes c59cb1d
-doing: T4 Deck components I
-next: T4 components; T5 shell+nav; push M1 (needs owner yes); T6 persistence
+progress: 30
+done: T1 skeleton 4e87c45; T2 CI 455b9ec; T3 theme c59cb1d; T4 components 6d8c8f0; T5 shell 8d4e7c5; M1 review fixes
+next: push M1 (owner yes); T6 persistence; T7 MediaStore scan; T8 Library screen
 plan: docs/plans/plan-retro-player.md
-updated: 2026-11-18 20:18
+updated: 2026-11-18 20:33
