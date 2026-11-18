@@ -1,9 +1,7 @@
 package com.canhamp.di
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
@@ -14,6 +12,7 @@ import com.canhamp.data.library.TrackDaoStore
 import com.canhamp.data.settings.SettingsRepository
 import com.canhamp.util.AndroidLogger
 import com.canhamp.util.Logger
+import com.canhamp.util.audioPermission
 
 private val Context.settingsStore by preferencesDataStore(name = "settings")
 
@@ -36,11 +35,7 @@ class AppContainer(val context: Context) {
     val logger: Logger by lazy { AndroidLogger() }
 
     val libraryRepository: LibraryRepository by lazy {
-        val permission = if (Build.VERSION.SDK_INT >= 33) {
-            Manifest.permission.READ_MEDIA_AUDIO
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
+        val permission = audioPermission()
         LibraryRepository(
             source = MediaStoreScanner(appContext.contentResolver),
             tracks = TrackDaoStore(trackDao),

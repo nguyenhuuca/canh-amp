@@ -22,4 +22,42 @@
     <string name="cd_next">Next track</string>
     <string name="cd_previous">Previous track</string>
     <string name="coming_soon">COMING SOON</string>
+    <string name="lib_rescan">RESCAN</string>
+    <string name="lib_scanning">SCANNING %1$d</string>
+    <string name="lib_indexed">INDEXED: %1$d AUDIO STREAMS</string>
+    <string name="lib_capacity">CAPACITY USED: %1$s / %2$s</string>
+    <string name="lib_free">%1$s FREE</string>
+    <string name="lib_search_hint">QUERY: ARTIST / TITLE / FILE...</string>
+    <string name="lib_tab_all">ALL TRACKS (%1$d)</string>
+    <string name="lib_tab_folders">FOLDERS</string>
+    <string name="lib_tab_artists">ARTISTS (%1$d)</string>
+    <string name="lib_tab_albums">ALBUMS (%1$d)</string>
+    <string name="lib_tab_recent">RECENT</string>
+    <string name="lib_perm_title">STORAGE ACCESS REQUIRED</string>
+    <string name="lib_perm_body">Canh Amp reads audio files on this phone to build your library. Nothing leaves the device.</string>
+    <string name="lib_perm_grant">GRANT ACCESS</string>
+    <string name="lib_perm_settings">OPEN SETTINGS</string>
+    <string name="lib_empty">NO AUDIO FOUND</string>
+    <string name="lib_empty_hint">Import a folder or rescan to add music.</string>
+    <string name="lib_import">+ IMPORT FOLDER / SCAN</string>
+    <string name="lib_add_queue">ADD TO QUEUE</string>
+    <string name="lib_play_next">PLAY NEXT</string>
+    <string name="lib_details">TRACK DETAILS &amp; TAGS</string>
+    <string name="lib_imported">IMPORTED %1$d TRACKS</string>
+    <string name="lib_import_empty">NO AUDIO IN FOLDER</string>
+    <string name="lib_import_dup">FOLDER ALREADY IMPORTED</string>
+    <string name="lib_add_n">ADD %1$d TO QUEUE</string>
+    <string name="lib_no_match">NO MATCH FOR \"%1$s\"</string>
+    <string name="lib_scan_failed">SCAN FAILED</string>
+    <string name="lib_scan_started">Scanning library</string>
+    <string name="lib_album_line">ALBUM: %1$s</string>
+    <string name="lib_mod_line">MOD: %1$s</string>
+    <string name="lib_files">%1$d FILES</string>
+    <string name="lib_tracks_count">%1$d TRACKS</string>
+    <string name="lib_storage_root" translatable="false">/INTERNAL STORAGE/MUSIC</string>
+    <string name="lib_db_ok" translatable="false">DATABASE: V1 OK</string>
+    <string name="lib_cd_clear">Clear search</string>
+    <string name="lib_cd_more">More options</string>
+    <string name="lib_cd_up">Up one level</string>
+    <string name="lib_cd_kilobits">%1$d kilobits</string>
 </resources>

@@ -94,7 +94,10 @@ fun AppNavGraph(shell: ShellViewModel = viewModel()) {
                 composable(DeckDestination.MAIN.route) { MainScreen() }
                 composable(DeckDestination.EQ.route) { EqScreen() }
                 composable(DeckDestination.PLAYLIST.route) { PlaylistScreen() }
-                composable(DeckDestination.LIBRARY.route) { LibraryScreen() }
+                composable(DeckDestination.LIBRARY.route) {
+                    // Playback and the action sheet are wired in a later task.
+                    LibraryScreen(onPlay = { _, _ -> }, onMore = {})
+                }
                 composable(DeckDestination.SKINS.route) { SkinsScreen() }
             }
             MiniPlayerBar(

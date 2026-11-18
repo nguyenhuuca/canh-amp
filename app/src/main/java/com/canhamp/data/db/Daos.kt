@@ -76,6 +76,15 @@ interface TrackDao {
     @Query("SELECT * FROM tracks WHERE album = :album AND $SEARCH ORDER BY title COLLATE NOCASE ASC, id ASC")
     fun pagingByAlbum(album: String, pattern: String): PagingSource<Int, TrackEntity>
 
+    @Query("SELECT * FROM tracks WHERE $SEARCH ORDER BY dateAddedSec DESC, id DESC LIMIT 100")
+    fun pagingRecent(pattern: String): PagingSource<Int, TrackEntity>
+
+    @Query("SELECT COUNT(DISTINCT artist) FROM tracks")
+    fun artistCount(): Flow<Int>
+
+    @Query("SELECT COUNT(DISTINCT album) FROM tracks")
+    fun albumCount(): Flow<Int>
+
     @Query("SELECT * FROM tracks ORDER BY dateAddedSec DESC, id DESC LIMIT :limit")
     fun recent(limit: Int = 100): Flow<List<TrackEntity>>
 
