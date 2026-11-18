@@ -53,7 +53,12 @@ class PlayerConnection(
 
     private val _messages = MutableSharedFlow<PlayerMessage>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
+    private val _queue = MutableStateFlow<List<QueueEntry>>(emptyList())
+
     val nowPlaying: StateFlow<NowPlaying> = _nowPlaying
+
+    /** The player's playlist in play order; follows the timeline, and edits made here show at once. */
+    val queue: StateFlow<List<QueueEntry>> = _queue
 
     /** One-off notices for the UI, such as the queue cap (B55). */
     val messages: SharedFlow<PlayerMessage> = _messages
@@ -104,6 +109,9 @@ class PlayerConnection(
         c.addListener(
             object : Player.Listener {
                 override fun onEvents(player: Player, events: Player.Events) {
+                    if (events.containsAny(Player.EVENT_TIMELINE_CHANGED, Player.EVENT_MEDIA_ITEM_TRANSITION)) {
+                        refreshQueue(c)
+                    }
                     refresh(c)
                     updateTicker(c)
                 }
@@ -114,8 +122,13 @@ class PlayerConnection(
             },
         )
         _connected.value = true
+        refreshQueue(c)
         refresh(c)
         updateTicker(c)
+    }
+
+    private fun refreshQueue(c: MediaController) {
+        _queue.value = List(c.mediaItemCount) { c.getMediaItemAt(it).toQueueEntry() ?: UNKNOWN_ENTRY }
     }
 
     private fun updateTicker(c: MediaController) {
@@ -242,11 +255,60 @@ class PlayerConnection(
 
     fun move(from: Int, to: Int) = withController { c ->
         val last = c.mediaItemCount - 1
-        if (from in 0..last && to in 0..last && from != to) c.moveMediaItem(from, to)
+        if (from in 0..last && to in 0..last && from != to) {
+            c.moveMediaItem(from, to)
+            _queue.update { list ->
+                if (from in list.indices && to in list.indices) list.toMutableList().apply { add(to, removeAt(from)) } else list
+            }
+        }
     }
 
     fun remove(index: Int) = withController { c ->
-        if (index in 0 until c.mediaItemCount) c.removeMediaItem(index)
+        if (index in 0 until c.mediaItemCount) {
+            c.removeMediaItem(index)
+            _queue.update { list -> if (index in list.indices) list.toMutableList().apply { removeAt(index) } else list }
+        }
+    }
+
+    /** B60 undo: puts [entry] back at [index] (clamped to the end). */
+    fun insert(index: Int, entry: QueueEntry) = withController { c ->
+        if (c.mediaItemCount >= QueueRepository.MAX_ITEMS) return@withController
+        val at = index.coerceIn(0, c.mediaItemCount)
+        c.addMediaItem(at, entry.toMediaItem())
+        _queue.update { list -> list.toMutableList().apply { add(at.coerceAtMost(size), entry) } }
+    }
+
+    /** Plays the item at [index] from its start. */
+    fun playAt(index: Int) = withController { c ->
+        if (index !in 0 until c.mediaItemCount) return@withController
+        c.seekTo(index, 0L)
+        if (c.playbackState == Player.STATE_IDLE) c.prepare()
+        c.play()
+    }
+
+    fun clearQueue() = withController { c ->
+        c.clearMediaItems()
+        c.stop()
+        _queue.value = emptyList()
+    }
+
+    /**
+     * B62: puts the list in [newOrder] without interrupting the item that plays. [playingNewIndex] is where that
+     * item sits in [newOrder]; the items around it are swapped out and the playing one is left alone.
+     * Ignored when the list changed size since [newOrder] was made.
+     */
+    fun replaceQueueOrder(newOrder: List<QueueEntry>, playingNewIndex: Int) = withController { c ->
+        val count = c.mediaItemCount
+        if (count == 0 || newOrder.size != count || playingNewIndex !in 0 until count) return@withController
+        val current = c.currentMediaItemIndex
+        if (current < 0 || current >= count) return@withController
+        if (current + 1 < count) c.removeMediaItems(current + 1, count)
+        if (current > 0) c.removeMediaItems(0, current)
+        if (playingNewIndex > 0) c.addMediaItems(0, newOrder.subList(0, playingNewIndex).map(QueueEntry::toMediaItem))
+        if (playingNewIndex + 1 < count) {
+            c.addMediaItems(newOrder.subList(playingNewIndex + 1, count).map(QueueEntry::toMediaItem))
+        }
+        _queue.value = newOrder
     }
 
     fun setShuffle(on: Boolean) {
@@ -272,5 +334,6 @@ class PlayerConnection(
         const val TICK_MS = 250L
         const val RETRY_START_MS = 500L
         const val RETRY_MAX_MS = 8_000L
+        val UNKNOWN_ENTRY = QueueEntry(trackId = -1L, uri = "", title = "", artist = "", album = "", durationMs = 0L, bitrateKbps = null)
     }
 }

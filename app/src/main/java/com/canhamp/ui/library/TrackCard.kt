@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AudioFile
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
@@ -28,6 +30,7 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -43,6 +46,8 @@ fun TrackCard(
     onPlay: () -> Unit,
     onMore: () -> Unit,
     modifier: Modifier = Modifier,
+    /** Non-null in pick mode: shows a checkbox with this state instead of the play and more buttons. */
+    pickChecked: Boolean? = null,
 ) {
     val c = Deck.colors
     val parts = listOfNotNull(
@@ -72,6 +77,7 @@ fun TrackCard(
             .semantics(mergeDescendants = true) {
                 contentDescription = spoken
                 customActions = actions
+                if (pickChecked != null) selected = pickChecked
             }
             .padding(start = Dimens.spaceLg, top = Dimens.spaceMd, bottom = Dimens.spaceMd),
         verticalAlignment = Alignment.CenterVertically,
@@ -101,8 +107,18 @@ fun TrackCard(
                 }
             }
         }
-        CardButton(Icons.Filled.PlayArrow, onPlay, circle = true)
-        CardButton(Icons.Filled.MoreVert, onMore, circle = false)
+        if (pickChecked != null) {
+            Box(Modifier.size(Dimens.minTouch), contentAlignment = Alignment.Center) {
+                Icon(
+                    if (pickChecked) Icons.Filled.CheckBox else Icons.Filled.CheckBoxOutlineBlank,
+                    contentDescription = null,
+                    tint = if (pickChecked) c.primaryContainer else c.onSurfaceVariant,
+                )
+            }
+        } else {
+            CardButton(Icons.Filled.PlayArrow, onPlay, circle = true)
+            CardButton(Icons.Filled.MoreVert, onMore, circle = false)
+        }
     }
 }
 

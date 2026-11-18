@@ -58,6 +58,17 @@ interface TrackDao {
     @Query("SELECT * FROM tracks WHERE id = :id")
     suspend fun findById(id: Long): TrackEntity?
 
+    /** Callers keep [uris] under SQLite's variable limit (chunks of 500). */
+    @Query("SELECT * FROM tracks WHERE uri IN (:uris)")
+    suspend fun findByUris(uris: List<String>): List<TrackEntity>
+
+    @Query("SELECT * FROM tracks WHERE filePath IN (:paths)")
+    suspend fun findByFilePaths(paths: List<String>): List<TrackEntity>
+
+    /** B61: every track of one folder, in file name order, capped at the queue limit. */
+    @Query("SELECT * FROM tracks WHERE folderPath = :folder ORDER BY fileName COLLATE NOCASE ASC, id ASC LIMIT 5000")
+    suspend fun tracksInFolder(folder: String): List<TrackEntity>
+
     @Query("UPDATE tracks SET sampleRateHz = :hz WHERE id = :id")
     suspend fun updateSampleRate(id: Long, hz: Int)
 

@@ -12,6 +12,9 @@ import com.canhamp.data.library.MediaStoreScanner
 import com.canhamp.data.library.TrackDaoLookup
 import com.canhamp.data.library.TrackDaoStore
 import com.canhamp.data.library.TrackMetadataReader
+import com.canhamp.data.playlist.ContentResolverStreams
+import com.canhamp.data.playlist.PlaylistFileRepository
+import com.canhamp.data.playlist.TrackDaoPlaylistIndex
 import com.canhamp.data.queue.QueueDaoStore
 import com.canhamp.data.queue.QueueRepository
 import com.canhamp.data.queue.SettingsPositionStore
@@ -57,6 +60,10 @@ class AppContainer(val context: Context) {
 
     val playerConnection: PlayerConnection by lazy {
         PlayerConnection(appContext, settingsRepository, logger, recorder = sampleRateRecorder)
+    }
+
+    val playlistFileRepository: PlaylistFileRepository by lazy {
+        PlaylistFileRepository(TrackDaoPlaylistIndex(trackDao), ContentResolverStreams(appContext.contentResolver))
     }
 
     val libraryRepository: LibraryRepository by lazy {

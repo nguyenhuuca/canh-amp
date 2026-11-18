@@ -49,6 +49,7 @@ fun TactileButton(
     active: Boolean = false,
     enabled: Boolean = true,
     contentDescription: String = label,
+    sublabel: String? = null,
 ) {
     val c = Deck.colors
     val source = remember { MutableInteractionSource() }
@@ -92,6 +93,15 @@ fun TactileButton(
         Column(Modifier.offset(nudge, nudge), horizontalAlignment = Alignment.CenterHorizontally) {
             if (icon != null) Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
             Text(label.uppercase(), style = textStyle, color = tint, textAlign = TextAlign.Center, maxLines = 1)
+            if (sublabel != null) {
+                Text(
+                    sublabel.uppercase(),
+                    style = Deck.type.labelSm,
+                    color = c.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                )
+            }
         }
     }
 }

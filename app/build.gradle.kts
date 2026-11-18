@@ -124,6 +124,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
+    implementation(libs.reorderable)
 
     // Tests
     testImplementation(libs.junit)

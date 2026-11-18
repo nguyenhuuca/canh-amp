@@ -91,6 +91,10 @@ fun LibraryScreen(
     onPlay: (TrackRow, List<TrackRow>) -> Unit,
     onMore: (TrackRow) -> Unit,
     modifier: Modifier = Modifier,
+    pick: PickKind? = null,
+    onPickFiles: (List<TrackRow>) -> Unit = {},
+    onPickFolder: (String) -> Unit = {},
+    onPickCancel: () -> Unit = {},
     vm: LibraryViewModel = viewModel(factory = LibraryViewModel.Factory),
 ) {
     val context = LocalContext.current
@@ -133,6 +137,13 @@ fun LibraryScreen(
     }
 
     BackHandler(enabled = nav.selection != null) { vm.goUp() }
+    BackHandler(enabled = pick != null && nav.selection == null) { onPickCancel() }
+
+    // B61: +DIR opens the Folders tab; a new pick starts with nothing ticked.
+    var picked by remember(pick) { mutableStateOf(emptyList<TrackRow>()) }
+    LaunchedEffect(pick) {
+        if (pick == PickKind.FOLDER) vm.selectTab(LibraryTab.FOLDERS)
+    }
 
     val needsPermission = permission == PermissionState.Needed || permission == PermissionState.PermanentlyDenied
     val groupList = nav.selection == null && nav.tab in GROUP_TABS
@@ -191,13 +202,20 @@ fun LibraryScreen(
                     groups = groups,
                     items = items,
                     query = query,
-                    onDrill = vm::drillInto,
+                    onDrill = if (pick == PickKind.FOLDER) onPickFolder else vm::drillInto,
                     onPlay = onPlay,
                     onMore = onMore,
+                    pick = pick,
+                    picked = picked,
+                    onTogglePick = { row ->
+                        picked = if (picked.any { it.id == row.id }) picked.filterNot { it.id == row.id } else picked + row
+                    },
                 )
             }
         }
-        if (permission == PermissionState.Granted) {
+        if (pick != null) {
+            PickBar(pick, picked.size, onAdd = { onPickFiles(picked) }, onCancel = onPickCancel)
+        } else if (permission == PermissionState.Granted) {
             ImportBar(onClick = vm::rescan)
         }
     }
@@ -215,6 +233,9 @@ private fun LazyListScope.listBody(
     onDrill: (String) -> Unit,
     onPlay: (TrackRow, List<TrackRow>) -> Unit,
     onMore: (TrackRow) -> Unit,
+    pick: PickKind?,
+    picked: List<TrackRow>,
+    onTogglePick: (TrackRow) -> Unit,
 ) {
     when (mode) {
         ListMode.Hidden -> Unit
@@ -239,11 +260,20 @@ private fun LazyListScope.listBody(
                 if (row == null) {
                     SkeletonRow()
                 } else {
-                    TrackCard(
-                        row = row,
-                        onPlay = { onPlay(row, items.itemSnapshotList.items) },
-                        onMore = { onMore(row) },
-                    )
+                    if (pick == PickKind.FILES) {
+                        TrackCard(
+                            row = row,
+                            onPlay = { onTogglePick(row) },
+                            onMore = { onMore(row) },
+                            pickChecked = picked.any { it.id == row.id },
+                        )
+                    } else {
+                        TrackCard(
+                            row = row,
+                            onPlay = { onPlay(row, items.itemSnapshotList.items) },
+                            onMore = { onMore(row) },
+                        )
+                    }
                 }
             }
         }
@@ -419,6 +449,56 @@ private fun SkeletonRow() {
             .background(c.surfaceContainerLow)
             .border(1.dp, c.outlineVariant, Deck.shapes.medium),
     )
+}
+
+/** Pick mode footer (B61): "ADD n TO QUEUE" for files, a hint for folders, and a way out. */
+@Composable
+private fun PickBar(pick: PickKind, count: Int, onAdd: () -> Unit, onCancel: () -> Unit) {
+    val c = Deck.colors
+    Row(
+        Modifier.fillMaxWidth().padding(vertical = Dimens.spaceMd),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.spaceMd),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (pick == PickKind.FILES) {
+            Box(
+                Modifier
+                    .weight(1f)
+                    .heightIn(min = Dimens.minTouch)
+                    .clip(Deck.shapes.medium)
+                    .background(if (count > 0) c.primaryContainer else c.surfaceContainerHigh)
+                    .clickable(enabled = count > 0, role = Role.Button, onClick = onAdd)
+                    .padding(Dimens.spaceMd),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    stringResource(R.string.lib_add_n, count),
+                    style = Deck.type.labelLg,
+                    color = if (count > 0) c.onPhosphor else c.onSurfaceVariant,
+                    maxLines = 1,
+                )
+            }
+        } else {
+            Text(
+                stringResource(R.string.pl_pick_dir_hint),
+                style = Deck.type.labelLg,
+                color = c.primaryContainer,
+                maxLines = 1,
+                modifier = Modifier.weight(1f),
+            )
+        }
+        Box(
+            Modifier
+                .heightIn(min = Dimens.minTouch)
+                .clip(Deck.shapes.medium)
+                .background(c.surfaceContainerHigh)
+                .clickable(role = Role.Button, onClick = onCancel)
+                .padding(horizontal = Dimens.spaceLg),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(stringResource(R.string.pl_cancel), style = Deck.type.labelLg, color = c.onSurface, maxLines = 1)
+        }
+    }
 }
 
 @Composable

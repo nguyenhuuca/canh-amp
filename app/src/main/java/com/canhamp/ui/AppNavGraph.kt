@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,10 +46,14 @@ import com.canhamp.ui.components.MiniPlayerBar
 import com.canhamp.ui.components.RecessedWell
 import com.canhamp.ui.components.VfdText
 import com.canhamp.ui.eq.EqScreen
+import com.canhamp.playback.QueueEntry
 import com.canhamp.ui.library.LibraryScreen
+import com.canhamp.ui.library.PickKind
+import com.canhamp.ui.library.toRow
 import com.canhamp.ui.library.TrackActionSheet
 import com.canhamp.ui.library.TrackDetailsSheet
 import com.canhamp.ui.library.TrackRow
+import kotlinx.coroutines.launch
 import com.canhamp.ui.library.playQueueFor
 import com.canhamp.ui.library.toQueueEntry
 import kotlinx.coroutines.delay
@@ -106,6 +111,23 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
     val addedQueue = stringResource(R.string.lib_added_queue)
     val addedNext = stringResource(R.string.lib_added_next)
     val queueFull = stringResource(R.string.queue_full)
+    val context = LocalContext.current
+    val trackDao = (context.applicationContext as CanhAmpApp).container.trackDao
+    val scope = rememberCoroutineScope()
+
+    // B61: the Library opened from the playlist in pick mode; leaving the Library ends it.
+    var pick by remember { mutableStateOf<PickKind?>(null) }
+    LaunchedEffect(current) {
+        if (current != DeckDestination.LIBRARY) pick = null
+    }
+    fun finishPick(entries: List<QueueEntry>) {
+        if (entries.isNotEmpty()) {
+            player.addToQueue(entries)
+            toast = context.getString(R.string.pl_added_n, entries.size)
+        }
+        pick = null
+        nav.switchTab(DeckDestination.PLAYLIST)
+    }
     LaunchedEffect(player) {
         player.messages.collect { toast = queueFull }
     }
@@ -134,7 +156,19 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
                     )
                 }
                 composable(DeckDestination.EQ.route) { EqScreen() }
-                composable(DeckDestination.PLAYLIST.route) { PlaylistScreen() }
+                composable(DeckDestination.PLAYLIST.route) {
+                    PlaylistScreen(
+                        onAddFromLibrary = { nav.switchTab(DeckDestination.LIBRARY) },
+                        onPickFiles = {
+                            pick = PickKind.FILES
+                            nav.switchTab(DeckDestination.LIBRARY)
+                        },
+                        onPickDir = {
+                            pick = PickKind.FOLDER
+                            nav.switchTab(DeckDestination.LIBRARY)
+                        },
+                    )
+                }
                 composable(DeckDestination.LIBRARY.route) {
                     LibraryScreen(
                         onPlay = { row, snapshot ->
@@ -142,6 +176,15 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
                             player.setQueue(entries, start)
                         },
                         onMore = { sheetRow = it },
+                        pick = pick,
+                        onPickFiles = { rows -> finishPick(rows.map(TrackRow::toQueueEntry)) },
+                        onPickFolder = { folder ->
+                            scope.launch { finishPick(trackDao.tracksInFolder(folder).map { it.toRow().toQueueEntry() }) }
+                        },
+                        onPickCancel = {
+                            pick = null
+                            nav.switchTab(DeckDestination.PLAYLIST)
+                        },
                     )
                 }
                 composable(DeckDestination.SKINS.route) { SkinsScreen() }
