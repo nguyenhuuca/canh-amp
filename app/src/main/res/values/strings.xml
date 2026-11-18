@@ -45,7 +45,6 @@
     <string name="lib_details">TRACK DETAILS &amp; TAGS</string>
     <string name="lib_added_queue">ADDED TO QUEUE</string>
     <string name="lib_added_next">PLAYS NEXT</string>
-    <string name="lib_details_placeholder">Track details arrive in a later build.</string>
     <string name="lib_sheet_close">CLOSE</string>
     <string name="lib_imported">IMPORTED %1$d TRACKS</string>
     <string name="lib_import_empty">NO AUDIO IN FOLDER</string>
@@ -116,4 +115,21 @@
     <string name="deck_cd_balance">Balance</string>
     <string name="deck_cd_seek">Song position</string>
     <string name="deck_cd_info">Track details</string>
+    <string name="det_title">TITLE</string>
+    <string name="det_artist">ARTIST</string>
+    <string name="det_album">ALBUM</string>
+    <string name="det_year">YEAR</string>
+    <string name="det_genre">GENRE</string>
+    <string name="det_track">TRACK NO</string>
+    <string name="det_format">FORMAT</string>
+    <string name="det_bitrate">BITRATE</string>
+    <string name="det_sample_rate">SAMPLE RATE</string>
+    <string name="det_duration">DURATION</string>
+    <string name="det_size">SIZE</string>
+    <string name="det_path">PATH</string>
+    <string name="det_modified">MODIFIED</string>
+    <string name="det_loading">READING TAGS...</string>
+    <string name="det_unreadable">TAGS UNREADABLE</string>
+    <string name="det_not_found">TRACK NOT FOUND</string>
+    <string name="queue_full">QUEUE FULL (5000)</string>
 </resources>

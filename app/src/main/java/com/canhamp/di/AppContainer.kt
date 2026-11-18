@@ -9,9 +9,15 @@ import androidx.room.Room
 import com.canhamp.data.db.CanhAmpDatabase
 import com.canhamp.data.library.LibraryRepository
 import com.canhamp.data.library.MediaStoreScanner
+import com.canhamp.data.library.TrackDaoLookup
 import com.canhamp.data.library.TrackDaoStore
+import com.canhamp.data.library.TrackMetadataReader
+import com.canhamp.data.queue.QueueDaoStore
+import com.canhamp.data.queue.QueueRepository
+import com.canhamp.data.queue.SettingsPositionStore
 import com.canhamp.data.settings.SettingsRepository
 import com.canhamp.playback.PlayerConnection
+import com.canhamp.playback.SampleRateRecorder
 import com.canhamp.playback.dsp.DspEngine
 import com.canhamp.playback.dsp.SpectrumTapProcessor
 import com.canhamp.util.AndroidLogger
@@ -43,7 +49,15 @@ class AppContainer(val context: Context) {
     @androidx.annotation.OptIn(UnstableApi::class)
     val spectrumTap: SpectrumTapProcessor by lazy { SpectrumTapProcessor(dspEngine.spectrumRing) }
 
-    val playerConnection: PlayerConnection by lazy { PlayerConnection(appContext, settingsRepository, logger) }
+    val sampleRateRecorder: SampleRateRecorder by lazy { SampleRateRecorder(TrackDaoLookup(trackDao), logger) }
+
+    val queueRepository: QueueRepository by lazy {
+        QueueRepository(QueueDaoStore(queueDao), SettingsPositionStore(settingsRepository), logger)
+    }
+
+    val playerConnection: PlayerConnection by lazy {
+        PlayerConnection(appContext, settingsRepository, logger, recorder = sampleRateRecorder)
+    }
 
     val libraryRepository: LibraryRepository by lazy {
         val permission = audioPermission()
@@ -55,6 +69,8 @@ class AppContainer(val context: Context) {
                 ContextCompat.checkSelfPermission(appContext, permission) == PackageManager.PERMISSION_GRANTED
             },
             logger = logger,
+            lookup = TrackDaoLookup(trackDao),
+            tags = TrackMetadataReader(appContext),
         )
     }
 }

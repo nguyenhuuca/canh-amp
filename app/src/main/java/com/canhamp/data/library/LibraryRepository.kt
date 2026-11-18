@@ -53,6 +53,11 @@ class TrackDaoStore(private val dao: TrackDao) : TrackStore {
     override suspend fun count(): Int = dao.count().first()
 }
 
+class TrackDaoLookup(private val dao: TrackDao) : TrackLookup {
+    override suspend fun findById(id: Long): TrackEntity? = dao.findById(id)
+    override suspend fun updateSampleRate(id: Long, hz: Int) = dao.updateSampleRate(id, hz)
+}
+
 class LibraryRepository(
     private val source: AudioSource,
     private val tracks: TrackStore,
@@ -61,6 +66,8 @@ class LibraryRepository(
     private val logger: Logger,
     private val clock: () -> Long = System::currentTimeMillis,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
+    private val lookup: TrackLookup? = null,
+    private val tags: TagSource? = null,
 ) {
     private val mutex = Mutex()
     private var running: Deferred<ScanOutcome>? = null
@@ -75,6 +82,23 @@ class LibraryRepository(
             running?.takeIf { it.isActive } ?: scope.async { doScan() }.also { running = it }
         }
         return job.await()
+    }
+
+    /** Track details (B8): row fields plus file tags; a sample rate learned here is written back to the row. */
+    suspend fun details(trackId: Long): DetailsResult {
+        val row = lookup?.findById(trackId) ?: return DetailsResult.NotFound
+        val read = tags?.read(row.uri) ?: return DetailsResult.Unreadable(row.toDetails(null))
+        val hz = read.sampleRateHz
+        if (row.sampleRateHz == null && hz != null && hz > 0) {
+            try {
+                lookup?.updateSampleRate(trackId, hz)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logger.w(TAG, "sample rate write-back failed: ${e.javaClass.simpleName}")
+            }
+        }
+        return DetailsResult.Found(row.toDetails(read))
     }
 
     private suspend fun doScan(): ScanOutcome {

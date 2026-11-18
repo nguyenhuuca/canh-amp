@@ -47,6 +47,7 @@ import com.canhamp.ui.components.VfdText
 import com.canhamp.ui.eq.EqScreen
 import com.canhamp.ui.library.LibraryScreen
 import com.canhamp.ui.library.TrackActionSheet
+import com.canhamp.ui.library.TrackDetailsSheet
 import com.canhamp.ui.library.TrackRow
 import com.canhamp.ui.library.playQueueFor
 import com.canhamp.ui.library.toQueueEntry
@@ -100,9 +101,14 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
     val stereo by shell.stereo.collectAsState()
     val player = (LocalContext.current.applicationContext as CanhAmpApp).container.playerConnection
     var sheetRow by remember { mutableStateOf<TrackRow?>(null) }
+    var detailsId by remember { mutableStateOf<Long?>(null) }
     var toast by remember { mutableStateOf<String?>(null) }
     val addedQueue = stringResource(R.string.lib_added_queue)
     val addedNext = stringResource(R.string.lib_added_next)
+    val queueFull = stringResource(R.string.queue_full)
+    LaunchedEffect(player) {
+        player.messages.collect { toast = queueFull }
+    }
     LaunchedEffect(toast) {
         if (toast != null) {
             delay(TOAST_MS)
@@ -175,7 +181,12 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
                 toast = addedNext
                 sheetRow = null
             },
+            onDetails = {
+                detailsId = row.id
+                sheetRow = null
+            },
             onDismiss = { sheetRow = null },
         )
     }
+    detailsId?.let { id -> TrackDetailsSheet(trackId = id, onDismiss = { detailsId = null }) }
 }

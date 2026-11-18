@@ -43,6 +43,7 @@ import com.canhamp.ui.components.LedToggle
 import com.canhamp.ui.components.RecessedWell
 import com.canhamp.ui.components.TactileButton
 import com.canhamp.ui.components.VfdText
+import com.canhamp.ui.library.TrackDetailsSheet
 import com.canhamp.ui.theme.Deck
 import com.canhamp.ui.theme.Dimens
 import com.canhamp.util.formatDuration
@@ -52,10 +53,11 @@ import com.canhamp.util.formatDuration
 fun MainScreen(
     onOpen: () -> Unit,
     onOpenEq: () -> Unit,
-    onInfo: () -> Unit = {},
     vm: MainViewModel = viewModel(factory = MainViewModel.Factory),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
+    var showDetails by remember { mutableStateOf(false) }
+    val currentTrackId = state.now.trackId
     val engine = (LocalContext.current.applicationContext as CanhAmpApp).container.dspEngine
     // Cold flow: the analyser only runs while this screen is resumed (B26).
     val frames = remember(engine) { engine.spectrumFrames() }
@@ -84,9 +86,12 @@ fun MainScreen(
             onNext = vm::next,
             onOpen = onOpen,
         )
-        TogglesRow(state, vm::toggleShuffle, vm::cycleRepeat, onInfo, onOpenEq)
+        TogglesRow(state, vm::toggleShuffle, vm::cycleRepeat, { showDetails = true }, onOpenEq, infoEnabled = currentTrackId != null)
         NowPlayingCard(state.now)
         FooterPlate()
+    }
+    if (showDetails && currentTrackId != null) {
+        TrackDetailsSheet(trackId = currentTrackId, onDismiss = { showDetails = false })
     }
 }
 
@@ -219,6 +224,7 @@ private fun TogglesRow(
     onRepeat: () -> Unit,
     onInfo: () -> Unit,
     onEq: () -> Unit,
+    infoEnabled: Boolean,
 ) {
     val repeat = state.now.repeat
     val repeatLabel = stringResource(
@@ -233,7 +239,7 @@ private fun TogglesRow(
             LedToggle(stringResource(R.string.toggle_shuffle), state.now.shuffle, { onShuffle() }, Modifier.weight(1f))
             LedToggle(repeatLabel, repeat != RepeatSetting.OFF, { onRepeat() }, Modifier.weight(1f))
             TactileButton(
-                stringResource(R.string.btn_info), onInfo, icon = Icons.Filled.Info,
+                stringResource(R.string.btn_info), onInfo, icon = Icons.Filled.Info, enabled = infoEnabled,
                 contentDescription = stringResource(R.string.deck_cd_info),
             )
             TactileButton(stringResource(R.string.nav_eq), onEq, icon = Icons.Filled.Equalizer)

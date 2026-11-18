@@ -44,7 +44,6 @@
     <string name="lib_details">CHI TIẾT BÀI</string>
     <string name="lib_added_queue">ĐÃ THÊM VÀO DANH SÁCH</string>
     <string name="lib_added_next">PHÁT TIẾP THEO</string>
-    <string name="lib_details_placeholder">Chi tiết bài sẽ có ở bản sau.</string>
     <string name="lib_sheet_close">ĐÓNG</string>
     <string name="lib_imported">ĐÃ THÊM %1$d BÀI</string>
     <string name="lib_import_empty">THƯ MỤC KHÔNG CÓ NHẠC</string>
@@ -109,4 +108,21 @@
     <string name="deck_cd_balance">Cân bằng</string>
     <string name="deck_cd_seek">Vị trí bài</string>
     <string name="deck_cd_info">Chi tiết bài hát</string>
+    <string name="det_title">TÊN BÀI</string>
+    <string name="det_artist">NGHỆ SĨ</string>
+    <string name="det_album">ALBUM</string>
+    <string name="det_year">NĂM</string>
+    <string name="det_genre">THỂ LOẠI</string>
+    <string name="det_track">SỐ BÀI</string>
+    <string name="det_format">ĐỊNH DẠNG</string>
+    <string name="det_bitrate">BITRATE</string>
+    <string name="det_sample_rate">TẦN SỐ MẪU</string>
+    <string name="det_duration">THỜI LƯỢNG</string>
+    <string name="det_size">DUNG LƯỢNG</string>
+    <string name="det_path">ĐƯỜNG DẪN</string>
+    <string name="det_modified">SỬA ĐỔI</string>
+    <string name="det_loading">ĐANG ĐỌC THẺ...</string>
+    <string name="det_unreadable">KHÔNG ĐỌC ĐƯỢC THẺ</string>
+    <string name="det_not_found">KHÔNG TÌM THẤY BÀI</string>
+    <string name="queue_full">DANH SÁCH ĐẦY (5000)</string>
 </resources>
