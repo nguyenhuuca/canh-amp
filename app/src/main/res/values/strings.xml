@@ -4,4 +4,22 @@
     <string name="app_tagline">CANH AMP</string>
     <string name="led_on">On</string>
     <string name="led_off">Off</string>
+    <string name="nav_main">MAIN</string>
+    <string name="nav_eq">EQ</string>
+    <string name="nav_playlist">PLAYLIST</string>
+    <string name="nav_library">LIBRARY</string>
+    <string name="nav_skins">SKINS</string>
+    <string name="subtitle_main">MAIN PLAYER</string>
+    <string name="subtitle_eq">GRAPHIC EQUALIZER</string>
+    <string name="subtitle_playlist">PLAYLIST QUEUE</string>
+    <string name="subtitle_library">MEDIA LIBRARY</string>
+    <string name="subtitle_skins">SKINS BROWSER</string>
+    <string name="led_stereo">STEREO</string>
+    <string name="led_mono">MONO</string>
+    <string name="err_engine_offline">ERR: AUDIO ENGINE OFFLINE</string>
+    <string name="cd_play">Play</string>
+    <string name="cd_pause">Pause</string>
+    <string name="cd_next">Next track</string>
+    <string name="cd_previous">Previous track</string>
+    <string name="coming_soon">COMING SOON</string>
 </resources>

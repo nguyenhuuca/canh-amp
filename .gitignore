@@ -20,3 +20,6 @@ captures/
 *.jks
 *.keystore
 keystore/
+
+# Git Bash crash dumps
+*.stackdump

@@ -3,4 +3,22 @@
     <string name="app_tagline">CANH AMP</string>
     <string name="led_on">Bật</string>
     <string name="led_off">Tắt</string>
+    <string name="nav_main">CHÍNH</string>
+    <string name="nav_eq">EQ</string>
+    <string name="nav_playlist">DANH SÁCH</string>
+    <string name="nav_library">THƯ VIỆN</string>
+    <string name="nav_skins">GIAO DIỆN</string>
+    <string name="subtitle_main">TRÌNH PHÁT</string>
+    <string name="subtitle_eq">BỘ CÂN BẰNG</string>
+    <string name="subtitle_playlist">DANH SÁCH PHÁT</string>
+    <string name="subtitle_library">THƯ VIỆN NHẠC</string>
+    <string name="subtitle_skins">GIAO DIỆN</string>
+    <string name="led_stereo">STEREO</string>
+    <string name="led_mono">MONO</string>
+    <string name="err_engine_offline">LỖI: MÁY PHÁT CHƯA SẴN SÀNG</string>
+    <string name="cd_play">Phát</string>
+    <string name="cd_pause">Tạm dừng</string>
+    <string name="cd_next">Bài tiếp</string>
+    <string name="cd_previous">Bài trước</string>
+    <string name="coming_soon">SẮP RA MẮT</string>
 </resources>
