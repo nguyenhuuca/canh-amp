@@ -8,7 +8,11 @@ import androidx.media3.common.util.UnstableApi
 import androidx.room.Room
 import com.canhamp.data.db.CanhAmpDatabase
 import com.canhamp.data.eq.EqRepository
+import com.canhamp.data.library.AndroidDocumentTrees
+import com.canhamp.data.library.ContentResolverUriPermissions
+import com.canhamp.data.library.DaoSafStore
 import com.canhamp.data.library.LibraryRepository
+import com.canhamp.data.library.SafImportDeps
 import com.canhamp.data.library.MediaStoreScanner
 import com.canhamp.data.library.TrackDaoLookup
 import com.canhamp.data.library.TrackDaoStore
@@ -81,6 +85,11 @@ class AppContainer(val context: Context) {
             logger = logger,
             lookup = TrackDaoLookup(trackDao),
             tags = TrackMetadataReader(appContext),
+            saf = SafImportDeps(
+                store = DaoSafStore(safFolderDao, trackDao),
+                trees = AndroidDocumentTrees(appContext.contentResolver),
+                grants = ContentResolverUriPermissions(appContext.contentResolver),
+            ),
         )
     }
 }

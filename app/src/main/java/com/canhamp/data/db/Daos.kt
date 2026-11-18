@@ -46,6 +46,9 @@ interface TrackDao {
     @Query("DELETE FROM tracks WHERE safFolderId = :id")
     suspend fun deleteBySafFolder(id: Long): Int
 
+    @Query("SELECT * FROM tracks WHERE safFolderId = :id ORDER BY id")
+    suspend fun tracksOfSafFolder(id: Long): List<TrackEntity>
+
     @Query("SELECT COUNT(*) FROM tracks")
     fun count(): Flow<Int>
 
@@ -116,6 +119,9 @@ interface SafFolderDao {
 
     @Query("SELECT * FROM saf_folders ORDER BY addedAtSec")
     fun all(): Flow<List<SafFolderEntity>>
+
+    @Query("SELECT * FROM saf_folders ORDER BY addedAtSec")
+    suspend fun allOnce(): List<SafFolderEntity>
 
     @Query("SELECT * FROM saf_folders WHERE treeUri = :treeUri")
     suspend fun findByTreeUri(treeUri: String): SafFolderEntity?

@@ -1,6 +1,8 @@
 package com.canhamp.ui.library
 
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -33,8 +35,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Backspace
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Terminal
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -68,6 +72,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.canhamp.R
+import com.canhamp.data.db.SafFolderEntity
 import com.canhamp.ui.components.DeckModule
 import com.canhamp.ui.components.LedToggle
 import com.canhamp.ui.components.RecessedWell
@@ -106,6 +111,7 @@ fun LibraryScreen(
     val scanning by vm.scanning.collectAsState()
     val everScanned by vm.everScanned.collectAsState()
     val groups by vm.groups.collectAsState()
+    val safFolders by vm.safFolders.collectAsState()
     val items = vm.tracks.collectAsLazyPagingItems()
 
     // Re-check on every resume so a grant made in system settings is picked up.
@@ -122,19 +128,30 @@ fun LibraryScreen(
         onDispose { owner?.lifecycle?.removeObserver(observer) }
     }
 
-    var message by remember { mutableStateOf<String?>(null) }
+    var message by remember { mutableStateOf<DeckMessage?>(null) }
     val failedText = stringResource(R.string.lib_scan_failed)
+    val importFailedText = stringResource(R.string.lib_import_failed)
+    val emptyText = stringResource(R.string.lib_import_empty)
+    val dupText = stringResource(R.string.lib_import_dup)
     LaunchedEffect(vm) {
         vm.events.collect { event ->
-            when (event) {
-                LibraryEvent.ScanFailed -> {
-                    message = failedText
-                    delay(MESSAGE_MS)
-                    message = null
-                }
+            message = when (event) {
+                LibraryEvent.ScanFailed -> DeckMessage(failedText, error = true)
+                LibraryEvent.ImportFailed -> DeckMessage(importFailedText, error = true)
+                LibraryEvent.ImportEmpty -> DeckMessage(emptyText, error = false)
+                LibraryEvent.ImportDuplicate -> DeckMessage(dupText, error = false)
+                is LibraryEvent.Imported -> DeckMessage(context.getString(R.string.lib_imported, event.count), error = false)
             }
+            delay(MESSAGE_MS)
+            message = null
         }
     }
+
+    // B10: the system tree picker; the repository takes the grant.
+    val pickTree = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri != null) vm.importFolder(uri.toString())
+    }
+    var removing by remember { mutableStateOf<Pair<SafFolderEntity, Int>?>(null) }
 
     BackHandler(enabled = nav.selection != null) { vm.goUp() }
     BackHandler(enabled = pick != null && nav.selection == null) { onPickCancel() }
@@ -203,6 +220,8 @@ fun LibraryScreen(
                     items = items,
                     query = query,
                     onDrill = if (pick == PickKind.FOLDER) onPickFolder else vm::drillInto,
+                    safFolders = safFolders,
+                    onRemoveSaf = { folder, count -> removing = folder to count },
                     onPlay = onPlay,
                     onMore = onMore,
                     pick = pick,
@@ -216,10 +235,40 @@ fun LibraryScreen(
         if (pick != null) {
             PickBar(pick, picked.size, onAdd = { onPickFiles(picked) }, onCancel = onPickCancel)
         } else if (permission == PermissionState.Granted) {
-            ImportBar(onClick = vm::rescan)
+            ImportBar(onClick = { pickTree.launch(null) })
         }
     }
+
+    removing?.let { (folder, count) ->
+        val c = Deck.colors
+        AlertDialog(
+            onDismissRequest = { removing = null },
+            containerColor = c.surfaceContainer,
+            title = { Text(stringResource(R.string.lib_remove_folder), style = Deck.type.labelLg, color = c.onSurface) },
+            text = {
+                Text(
+                    stringResource(R.string.lib_remove_folder_confirm, folder.displayName, count),
+                    style = Deck.type.bodyMd,
+                    color = c.onSurfaceVariant,
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    vm.removeFolder(folder.id)
+                    removing = null
+                }) { Text(stringResource(R.string.lib_remove), style = Deck.type.labelLg, color = c.error) }
+            },
+            dismissButton = {
+                TextButton(onClick = { removing = null }) {
+                    Text(stringResource(R.string.pl_cancel), style = Deck.type.labelLg, color = c.onSurfaceVariant)
+                }
+            },
+        )
+    }
 }
+
+/** A short line shown in the storage bay in place of the scan status. */
+private data class DeckMessage(val text: String, val error: Boolean)
 
 private val GROUP_TABS = setOf(LibraryTab.FOLDERS, LibraryTab.ARTISTS, LibraryTab.ALBUMS)
 
@@ -231,6 +280,8 @@ private fun LazyListScope.listBody(
     items: LazyPagingItems<TrackRow>,
     query: String,
     onDrill: (String) -> Unit,
+    safFolders: List<SafFolderEntity>,
+    onRemoveSaf: (SafFolderEntity, Int) -> Unit,
     onPlay: (TrackRow, List<TrackRow>) -> Unit,
     onMore: (TrackRow) -> Unit,
     pick: PickKind?,
@@ -248,10 +299,13 @@ private fun LazyListScope.listBody(
         }
         ListMode.Populated -> if (groupList) {
             items(groups, key = { "g-${tab.name}-${it.name}" }) { group ->
+                val safFolder = if (tab == LibraryTab.FOLDERS) safFolderFor(group.name, safFolders) else null
                 GroupCard(
                     group = group,
                     displayName = if (tab == LibraryTab.FOLDERS) shortPath(group.name) else group.name,
                     onClick = { onDrill(group.name) },
+                    saf = safFolder != null,
+                    onLongClick = safFolder?.let { f -> { onRemoveSaf(f, group.count) } },
                 )
             }
         } else {
@@ -281,7 +335,7 @@ private fun LazyListScope.listBody(
 }
 
 @Composable
-private fun StorageBay(scanning: Int?, indexed: Int, message: String?, onRescan: () -> Unit) {
+private fun StorageBay(scanning: Int?, indexed: Int, message: DeckMessage?, onRescan: () -> Unit) {
     val c = Deck.colors
     val reduced = rememberReducedMotion()
     val isScanning = scanning != null
@@ -332,9 +386,9 @@ private fun StorageBay(scanning: Int?, indexed: Int, message: String?, onRescan:
             RecessedWell(Modifier.fillMaxWidth(), vfd = true, padding = PaddingValues(Dimens.spaceMd)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        message ?: status,
+                        message?.text ?: status,
                         style = Deck.type.labelLg,
-                        color = if (message != null) c.error else c.primaryContainer,
+                        color = if (message?.error == true) c.error else c.primaryContainer,
                         maxLines = 1,
                         modifier = Modifier.weight(1f),
                     )

@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class SettingsRepository(private val store: DataStore<Preferences>) : ScanGenerationStore {
+class SettingsRepository(private val store: DataStore<Preferences>) : ScanGenerationStore, SkinPreferences {
 
-    val settings: Flow<Settings> = store.data.map { prefs ->
+    override val settings: Flow<Settings> = store.data.map { prefs ->
         SettingsMapper.fromPreferences(prefs.asMap().mapKeys { it.key.name })
     }
 
-    suspend fun setTheme(theme: ThemeId) = put { it[THEME] = theme.name }
+    override suspend fun setTheme(theme: ThemeId) = put { it[THEME] = theme.name }
     suspend fun setShuffle(on: Boolean) = put { it[SHUFFLE] = on }
     suspend fun setRepeat(mode: RepeatSetting) = put { it[REPEAT] = mode.name }
     suspend fun setVolume(v: Float) = put { it[VOLUME] = if (v.isNaN()) 0f else v.coerceIn(0f, 1f) }
@@ -41,7 +41,9 @@ class SettingsRepository(private val store: DataStore<Preferences>) : ScanGenera
 
     suspend fun setTimeMode(mode: TimeMode) = put { it[TIME_MODE] = mode.name }
     suspend fun setVisMode(mode: VisMode) = put { it[VIS_MODE] = mode.name }
-    suspend fun setVisAnimated(on: Boolean) = put { it[VIS_ANIMATED] = on }
+    override suspend fun setVisAnimated(on: Boolean) = put { it[VIS_ANIMATED] = on }
+
+    override suspend fun setPreserveEqColors(on: Boolean) = put { it[PRESERVE_EQ_COLORS] = on }
 
     suspend fun setQueuePosition(index: Int, ms: Long) = put {
         it[QUEUE_INDEX] = index.coerceAtLeast(0)
@@ -76,5 +78,6 @@ class SettingsRepository(private val store: DataStore<Preferences>) : ScanGenera
         val QUEUE_POSITION_MS = longPreferencesKey(SettingsMapper.QUEUE_POSITION_MS)
         val SCAN_GENERATION = longPreferencesKey(SettingsMapper.SCAN_GENERATION)
         val LAST_SCAN_AT_MS = longPreferencesKey(SettingsMapper.LAST_SCAN_AT_MS)
+        val PRESERVE_EQ_COLORS = booleanPreferencesKey(SettingsMapper.PRESERVE_EQ_COLORS)
     }
 }

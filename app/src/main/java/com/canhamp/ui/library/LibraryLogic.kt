@@ -1,6 +1,7 @@
 package com.canhamp.ui.library
 
 import com.canhamp.data.db.GroupRow
+import com.canhamp.data.db.SafFolderEntity
 import com.canhamp.data.db.TrackEntity
 import java.time.Instant
 import java.time.ZoneId
@@ -33,6 +34,21 @@ fun sourceFor(tab: LibraryTab, selection: String?, pattern: String): QueryKind =
 /** Group cards whose name contains [query], ignoring case; a blank query keeps all. */
 fun filterGroups(groups: List<GroupRow>, query: String): List<GroupRow> =
     if (query.isBlank()) groups else groups.filter { it.name.contains(query, ignoreCase = true) }
+
+/** True for a Folders group that lives under an imported SAF folder (path "/SAF/<name>[/sub]"). */
+fun isSafGroup(groupName: String): Boolean = groupName.startsWith("/SAF/")
+
+/**
+ * The imported folder a Folders group belongs to, or null for a MediaStore folder. Two imports with the
+ * same display name share a prefix; the earlier one is returned.
+ */
+fun safFolderFor(groupName: String, folders: List<SafFolderEntity>): SafFolderEntity? {
+    if (!isSafGroup(groupName)) return null
+    return folders.firstOrNull { f ->
+        val root = com.canhamp.data.library.SafTrackMapper.folderPath(f.displayName, "")
+        groupName == root || groupName.startsWith("$root/")
+    }
+}
 
 /** After the system dialog answered: a refusal without a rationale means "don't ask again" (B1). */
 fun permissionAfterRequest(granted: Boolean, shouldShowRationale: Boolean): PermissionState = when {

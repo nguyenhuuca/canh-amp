@@ -17,6 +17,7 @@ import com.canhamp.data.settings.VisMode
 import com.canhamp.playback.dsp.SpectrumFrame
 import com.canhamp.ui.theme.CanhAmpTheme
 import com.canhamp.ui.theme.Deck
+import com.canhamp.ui.theme.eq
 
 private const val SEGMENTS = 16
 private const val GREEN_SEGMENTS = 10
@@ -41,13 +42,14 @@ fun SpectrumView(
     modifier: Modifier = Modifier,
 ) {
     val c = Deck.colors
+    val eq = Deck.eq
     val off = c.surfaceVariant.copy(alpha = 0.35f)
     val height = (SegmentHeight + SegmentGap) * SEGMENTS
     Canvas(modifier.fillMaxWidth().height(height).clearAndSetSemantics { }) {
         if (mode == VisMode.WAVE) {
-            drawWave(frame.wave, c.primaryContainer, animated)
+            drawWave(frame.wave, eq.green, animated)
         } else {
-            drawBars(frame, animated, off, c.primaryContainer, c.secondaryContainer, c.tertiary)
+            drawBars(frame, animated, off, eq.green, eq.amber, eq.orange)
         }
     }
 }

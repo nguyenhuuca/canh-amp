@@ -13,8 +13,11 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.canhamp.CanhAmpApp
 import com.canhamp.data.db.GroupRow
+import com.canhamp.data.db.SafFolderDao
+import com.canhamp.data.db.SafFolderEntity
 import com.canhamp.data.db.TrackDao
 import com.canhamp.data.db.TrackEntity
+import com.canhamp.data.library.ImportOutcome
 import com.canhamp.data.library.LibraryRepository
 import com.canhamp.data.library.ScanGenerationStore
 import com.canhamp.data.library.ScanOutcome
@@ -58,6 +61,10 @@ data class TabCounts(val tracks: Int = 0, val artists: Int = 0, val albums: Int 
 /** One-shot messages shown on the deck. */
 sealed interface LibraryEvent {
     data object ScanFailed : LibraryEvent
+    data class Imported(val count: Int) : LibraryEvent
+    data object ImportEmpty : LibraryEvent
+    data object ImportDuplicate : LibraryEvent
+    data object ImportFailed : LibraryEvent
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -65,6 +72,7 @@ class LibraryViewModel(
     private val dao: TrackDao,
     private val repo: LibraryRepository,
     private val store: ScanGenerationStore,
+    private val safDao: SafFolderDao,
     private val clock: () -> Long = System::currentTimeMillis,
 ) : ViewModel() {
 
@@ -86,8 +94,13 @@ class LibraryViewModel(
     )
     val events: SharedFlow<LibraryEvent> = _events.asSharedFlow()
 
-    /** Rows processed by the running scan, or null when idle. */
-    val scanning: StateFlow<Int?> = repo.scanning
+    /** Rows processed by the running scan or folder import, or null when idle (B14). */
+    val scanning: StateFlow<Int?> = combine(repo.scanning, repo.importing) { scan, import -> scan ?: import }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    /** Imported SAF folders, to tell which Folders groups can be removed. */
+    val safFolders: StateFlow<List<SafFolderEntity>> = safDao.all()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     private val debounced: StateFlow<String> =
         _query.debouncedQuery().stateIn(viewModelScope, SharingStarted.Eagerly, "")
@@ -179,6 +192,23 @@ class LibraryViewModel(
         if (_permission.value == PermissionState.Granted) viewModelScope.launch { runScan() }
     }
 
+    /** The folder picked in the system tree picker (B10). */
+    fun importFolder(treeUri: String) {
+        viewModelScope.launch {
+            val event = when (val out = repo.importFolder(treeUri)) {
+                is ImportOutcome.Success -> LibraryEvent.Imported(out.result.trackCount)
+                ImportOutcome.Empty -> LibraryEvent.ImportEmpty
+                ImportOutcome.AlreadyImported -> LibraryEvent.ImportDuplicate
+                ImportOutcome.NotPersistable, ImportOutcome.Failed -> LibraryEvent.ImportFailed
+            }
+            _events.tryEmit(event)
+        }
+    }
+
+    fun removeFolder(folderId: Long) {
+        viewModelScope.launch { repo.removeFolder(folderId) }
+    }
+
     private suspend fun runScan() {
         when (repo.scan()) {
             is ScanOutcome.Success -> _everScanned.value = true
@@ -190,7 +220,7 @@ class LibraryViewModel(
         val Factory = viewModelFactory {
             initializer {
                 val container = (this[APPLICATION_KEY] as CanhAmpApp).container
-                LibraryViewModel(container.trackDao, container.libraryRepository, container.settingsRepository)
+                LibraryViewModel(container.trackDao, container.libraryRepository, container.settingsRepository, container.safFolderDao)
             }
         }
     }

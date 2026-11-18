@@ -10,6 +10,12 @@ class SettingsMapperTest {
         assertEquals(Settings(), SettingsMapper.fromPreferences(emptyMap()))
     }
 
+    @Test fun preserveEqColorsDefaultsOffAndIsRead() {
+        assertEquals(false, SettingsMapper.fromPreferences(emptyMap()).preserveEqColors)
+        assertEquals(true, SettingsMapper.fromPreferences(mapOf("preserveEqColors" to true)).preserveEqColors)
+        assertEquals(false, SettingsMapper.fromPreferences(mapOf("preserveEqColors" to "yes")).preserveEqColors)
+    }
+
     @Test fun parseGainsValid() {
         assertArrayEquals(intArrayOf(1, -2, 3, 4, 5, 6, 7, 8, 9, 10), SettingsMapper.parseGains("1,-2,3,4,5,6,7,8,9,10"))
     }

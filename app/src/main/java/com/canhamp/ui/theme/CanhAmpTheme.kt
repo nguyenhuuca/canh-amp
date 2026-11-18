@@ -31,6 +31,7 @@ fun glowShadow(color: Color, blur: Float = 8f): Shadow =
 @Composable
 fun CanhAmpTheme(
     themeId: ThemeId = ThemeId.CLASSIC,
+    preserveEqColors: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colors = remember(themeId) { deckColorsFor(themeId) }
@@ -70,6 +71,7 @@ fun CanhAmpTheme(
     }
     CompositionLocalProvider(
         LocalDeckColors provides colors,
+        LocalPreserveEqColors provides preserveEqColors,
         LocalDeckType provides remember { DeckType() },
         LocalDeckShapes provides remember { DeckShapes() },
     ) {

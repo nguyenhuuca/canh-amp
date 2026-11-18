@@ -25,6 +25,7 @@ data class Settings(
     val queuePositionMs: Long = 0L,
     val scanGeneration: Long = 0L,
     val lastScanAtMs: Long = 0L,
+    val preserveEqColors: Boolean = false,
 ) {
     override fun equals(other: Any?): Boolean =
         other is Settings && theme == other.theme && shuffle == other.shuffle && repeat == other.repeat &&
@@ -33,11 +34,12 @@ data class Settings(
             eqPresetName == other.eqPresetName && bassDb == other.bassDb && trebleDb == other.trebleDb &&
             timeMode == other.timeMode && visMode == other.visMode && visAnimated == other.visAnimated &&
             queueIndex == other.queueIndex && queuePositionMs == other.queuePositionMs &&
-            scanGeneration == other.scanGeneration && lastScanAtMs == other.lastScanAtMs
+            scanGeneration == other.scanGeneration && lastScanAtMs == other.lastScanAtMs &&
+            preserveEqColors == other.preserveEqColors
 
     override fun hashCode(): Int = listOf(
         theme, shuffle, repeat, volume, balance, eqEnabled, eqGains.contentHashCode(), eqPreamp,
         eqPresetName, bassDb, trebleDb, timeMode, visMode, visAnimated, queueIndex, queuePositionMs,
-        scanGeneration, lastScanAtMs,
+        scanGeneration, lastScanAtMs, preserveEqColors,
     ).hashCode()
 }

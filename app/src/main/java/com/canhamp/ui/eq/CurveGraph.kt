@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.canhamp.ui.theme.CanhAmpTheme
 import com.canhamp.ui.theme.Deck
+import com.canhamp.ui.theme.eq
 import kotlin.math.log10
 
 private const val SCALE_DB = 15f
@@ -35,7 +36,7 @@ private val GridHz = listOf(100.0, 1_000.0, 10_000.0)
 @Composable
 fun CurveGraph(points: List<Pair<Double, Double>>, bypassed: Boolean, modifier: Modifier = Modifier) {
     val c = Deck.colors
-    val line = if (bypassed) c.outline else c.primaryContainer
+    val line = if (bypassed) c.outline else Deck.eq.green
     Box(
         modifier
             .fillMaxWidth()

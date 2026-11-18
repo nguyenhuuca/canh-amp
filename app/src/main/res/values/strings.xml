@@ -229,4 +229,47 @@
     <string name="eq_cd_db_minus">minus %1$d decibels</string>
     <string name="eq_cd_db_zero">0 decibels</string>
     <string name="eq_cd_delete">Delete preset</string>
+    <string name="lib_import_failed">IMPORT FAILED</string>
+    <string name="lib_saf_badge" translatable="false">SAF</string>
+    <string name="lib_remove_folder">REMOVE FOLDER</string>
+    <string name="lib_remove_folder_confirm">Remove \"%1$s\" and its %2$d tracks from the library? The files stay on the device.</string>
+    <string name="lib_remove">REMOVE</string>
+    <string name="lib_cd_saf_hint">Imported folder. Long press to remove.</string>
+    <string name="skins_title">SKIN SELECTOR // RETRO ENGINE</string>
+    <string name="skins_subtitle">BUILT-IN THEME DECK</string>
+    <string name="skins_engine" translatable="false">ENG: v0.1</string>
+    <string name="skins_mounted">MOUNTED ACTIVE DECK</string>
+    <string name="skins_active">ACTIVE</string>
+    <string name="skins_current">[CURRENT ACTIVE]</string>
+    <string name="skins_apply">APPLY SKIN</string>
+    <string name="skins_applied">APPLIED</string>
+    <string name="skins_all">ALL SKINS (%1$d)</string>
+    <string name="skins_cat_classic">CLASSIC</string>
+    <string name="skins_cat_modern">MODERN</string>
+    <string name="skins_cat_cyber">CYBER / NEON</string>
+    <string name="skins_cat_dark">DARK / OLED</string>
+    <string name="skins_name_classic" translatable="false">Classic Deck</string>
+    <string name="skins_name_bento" translatable="false">Modern Bento</string>
+    <string name="skins_name_titanium" translatable="false">Titanium Black</string>
+    <string name="skins_name_cyber" translatable="false">Cyber Neon Matrix</string>
+    <string name="skins_tag_classic">CLASSIC</string>
+    <string name="skins_tag_modern">MODERN</string>
+    <string name="skins_tag_contrast">HIGH CONTRAST</string>
+    <string name="skins_tag_animated">ANIMATED</string>
+    <string name="skins_desc_classic">Phosphor green on charcoal, amber accents</string>
+    <string name="skins_desc_bento">Slate and brushed aluminium, gold LEDs</string>
+    <string name="skins_desc_titanium">Pure black for OLED, signal-red accents</string>
+    <string name="skins_desc_cyber">Terminal green on black, scanline glow</string>
+    <string name="skins_id_line">ID: %1$s // %2$s</string>
+    <string name="skins_prefs">ENGINE PREFERENCES</string>
+    <string name="skins_pref_eq_colors">Preserve custom EQ colours</string>
+    <string name="skins_pref_anim_vis">Allow animated visualizer</string>
+    <string name="skins_enabled">ENABLED</string>
+    <string name="skins_disabled">DISABLED</string>
+    <string name="skins_footer">%1$d SKINS • BUILT-IN</string>
+    <string name="skins_preview_idle">NO TRACK</string>
+    <string name="skins_cd_card">%1$s, %2$s theme, %3$s</string>
+    <string name="skins_cd_applied">applied</string>
+    <string name="skins_cd_not_applied">not applied</string>
+    <string name="skins_cd_apply">Apply %1$s</string>
 </resources>
