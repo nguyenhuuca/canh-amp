@@ -15,13 +15,13 @@
 - [x] T8 Library screen fad00b9
 - [x] T9 Playback service and connection f450afc
 - [x] T10 Main deck screen 57e867f
-- [~] T11 Track details and error handling
+- [x] T11 Track details and error handling c101e4d
 
 ### M3: queue, playlists, SAF
-- [~] T12 Queue persistence and restore
-- [ ] T13 Playlist screen
+- [x] T12 Queue persistence and restore c101e4d
+- [~] T13 Playlist screen
 - [x] T14 M3U codec 335ae12
-- [ ] T15 Playlist save and load
+- [~] T15 Playlist save and load
 - [ ] T16 SAF folder import
 
 ### M4: DSP and EQ
