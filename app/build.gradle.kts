@@ -78,6 +78,10 @@ android {
         buildConfig = true
     }
 
+    testCoverage {
+        jacocoVersion = "0.8.13"
+    }
+
     testOptions {
         unitTests {
             isReturnDefaultValues = true
