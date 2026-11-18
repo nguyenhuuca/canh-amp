@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -79,8 +80,16 @@ fun MiniPlayerBar(
             .padding(horizontal = Dimens.margin),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        Box(
+            Modifier
+                .weight(1f)
+                .fillMaxHeight()
+                .heightIn(min = Dimens.minTouch)
+                .clickable(role = Role.Button, onClick = onOpen),
+            contentAlignment = Alignment.Center,
+        ) {
         RecessedWell(
-            Modifier.weight(1f).height(32.dp).clickable(role = Role.Button, onClick = onOpen),
+            Modifier.fillMaxWidth().height(32.dp),
             padding = PaddingValues(horizontal = 8.dp),
         ) {
             Row(Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
@@ -100,6 +109,7 @@ fun MiniPlayerBar(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
+        }
         }
         Spacer(Modifier.width(4.dp))
         MiniButton(Icons.Filled.SkipPrevious, stringResource(R.string.cd_previous), onPrev)
@@ -143,7 +153,7 @@ private fun MiniButton(icon: ImageVector, description: String, onClick: () -> Un
     Box(
         Modifier
             .minimumInteractiveComponentSize()
-            .clickable(role = Role.Button, onClickLabel = description) {
+            .clickable(role = Role.Button) {
                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 onClick()
             },

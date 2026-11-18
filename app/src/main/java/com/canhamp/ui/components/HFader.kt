@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.setProgress
 import androidx.compose.ui.semantics.stateDescription
@@ -56,6 +57,7 @@ fun faderValueFromX(x: Float, width: Float, steps: Int): Float {
 fun HFader(
     value: Float,
     onValueChange: (Float) -> Unit,
+    contentDescription: String,
     modifier: Modifier = Modifier,
     onValueChangeFinished: () -> Unit = {},
     steps: Int = 0,
@@ -67,17 +69,18 @@ fun HFader(
     val current = value.coerceIn(0f, 1f)
     val onChange by rememberUpdatedState(onValueChange)
     val onFinished by rememberUpdatedState(onValueChangeFinished)
-    val stepSize = if (steps > 0) 1f / steps else 0.05f
 
     Box(
         modifier
             .fillMaxWidth()
             .height(48.dp)
             .semantics(mergeDescendants = true) {
-                progressBarRangeInfo = ProgressBarRangeInfo(current, 0f..1f, if (steps > 0) steps - 1 else 0)
+                this.contentDescription = contentDescription
+                progressBarRangeInfo =ProgressBarRangeInfo(current, 0f..1f, if (steps > 0) steps - 1 else 0)
                 if (stateDescription != null) this.stateDescription = stateDescription
                 setProgress { target ->
                     onChange(faderValueFromX(target.coerceIn(0f, 1f), 1f, steps))
+                    onFinished()
                     true
                 }
             }
@@ -151,5 +154,5 @@ fun HFader(
 @Preview(showBackground = true, backgroundColor = 0xFF101417)
 @Composable
 private fun HFaderPreview() = CanhAmpTheme {
-    Box(Modifier.padding(8.dp)) { HFader(value = 0.5f, onValueChange = {}, detent = true) }
+    Box(Modifier.padding(8.dp)) { HFader(value = 0.5f, onValueChange = {}, contentDescription = "Balance", detent = true) }
 }

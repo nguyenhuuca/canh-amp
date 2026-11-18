@@ -39,16 +39,28 @@ jobs:
 
       - name: Check translation completeness (EN/VI)
         run: |
-          ./gradlew lintDebug --no-daemon || true
+          set +e
+          ./gradlew lintDebug --no-daemon
+          LINT_RC=$?
+          set -e
           REPORT="app/build/reports/lint-results-debug.txt"
-          if [ -f "$REPORT" ] && grep -qE "MissingTranslation|ExtraTranslation" "$REPORT"; then
+          if [ ! -f "$REPORT" ]; then
+            echo "Lint report not found at $REPORT (lintDebug rc=$LINT_RC)"
+            exit 1
+          fi
+          if grep -qE "MissingTranslation|ExtraTranslation" "$REPORT"; then
             echo "Translation completeness check failed: values/ and values-vi/strings.xml are out of sync:"
             grep -E "MissingTranslation|ExtraTranslation" "$REPORT"
+            exit 1
+          fi
+          if [ "$LINT_RC" -ne 0 ]; then
+            echo "lintDebug failed (rc=$LINT_RC)"
             exit 1
           fi
           echo "Translation completeness check passed."
 
       - name: Decode debug keystore
+        if: github.event_name == 'push'
         env:
           DEBUG_KEYSTORE_BASE64: ${{ secrets.DEBUG_KEYSTORE_BASE64 }}
         run: |
@@ -65,9 +77,9 @@ jobs:
         env:
           CI_VERSION_CODE: ${{ github.run_number }}
           CI_VERSION_NAME: 0.1.0-dev+${{ env.SHORT_SHA }}
-          DEBUG_KEYSTORE_PASSWORD: ${{ secrets.DEBUG_KEYSTORE_PASSWORD }}
-          DEBUG_KEY_ALIAS: ${{ secrets.DEBUG_KEY_ALIAS }}
-          DEBUG_KEY_PASSWORD: ${{ secrets.DEBUG_KEY_PASSWORD }}
+          DEBUG_KEYSTORE_PASSWORD: ${{ github.event_name == 'push' && secrets.DEBUG_KEYSTORE_PASSWORD || '' }}
+          DEBUG_KEY_ALIAS: ${{ github.event_name == 'push' && secrets.DEBUG_KEY_ALIAS || '' }}
+          DEBUG_KEY_PASSWORD: ${{ github.event_name == 'push' && secrets.DEBUG_KEY_PASSWORD || '' }}
 
       - name: Check forbidden content
         run: bash scripts/ci/check-forbidden.sh

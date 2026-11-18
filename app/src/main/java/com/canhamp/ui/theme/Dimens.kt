@@ -12,6 +12,6 @@ object Dimens {
     val gutter = 8.dp
     val minTouch = 48.dp
     val headerHeight = 56.dp
-    val miniPlayerHeight = 44.dp
+    val miniPlayerHeight = 48.dp
     val navHeight = 64.dp
 }
