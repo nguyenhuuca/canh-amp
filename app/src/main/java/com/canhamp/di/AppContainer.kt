@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.media3.common.util.UnstableApi
 import androidx.room.Room
 import com.canhamp.data.db.CanhAmpDatabase
+import com.canhamp.data.eq.EqRepository
 import com.canhamp.data.library.LibraryRepository
 import com.canhamp.data.library.MediaStoreScanner
 import com.canhamp.data.library.TrackDaoLookup
@@ -44,6 +45,8 @@ class AppContainer(val context: Context) {
     val eqPresetDao by lazy { database.eqPresetDao() }
 
     val settingsRepository: SettingsRepository by lazy { SettingsRepository(appContext.settingsStore) }
+
+    val eqRepository: EqRepository by lazy { EqRepository(eqPresetDao) }
 
     val logger: Logger by lazy { AndroidLogger() }
 
