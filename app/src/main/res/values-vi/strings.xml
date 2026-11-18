@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_tagline">CANH AMP</string>
+    <string name="led_on">Bật</string>
+    <string name="led_off">Tắt</string>
 </resources>

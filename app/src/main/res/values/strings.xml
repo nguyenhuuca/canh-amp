@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name" translatable="false">Canh Amp</string>
     <string name="app_tagline">CANH AMP</string>
+    <string name="led_on">On</string>
+    <string name="led_off">Off</string>
 </resources>
