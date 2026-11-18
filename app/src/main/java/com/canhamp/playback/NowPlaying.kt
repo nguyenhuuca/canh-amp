@@ -21,6 +21,7 @@ data class NowPlaying(
     val artist: String = "",
     val album: String = "",
     val isPlaying: Boolean = false,
+    val buffering: Boolean = false,
     val positionMs: Long = 0L,
     val durationMs: Long = 0L,
     val bitrateKbps: Int? = null,
@@ -31,6 +32,10 @@ data class NowPlaying(
     val shuffle: Boolean = false,
     val repeat: RepeatSetting = RepeatSetting.OFF,
     val volume: Float = 0.8f,
+    /** Embedded cover bytes (B32); decoded by the UI. */
+    val artworkData: ByteArray? = null,
+    /** Sample MIME type of the selected audio track, for the format badge. */
+    val mimeType: String? = null,
 ) {
     companion object {
         val EMPTY = NowPlaying()

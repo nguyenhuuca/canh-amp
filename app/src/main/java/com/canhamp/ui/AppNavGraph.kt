@@ -121,7 +121,12 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
                 startDestination = DeckDestination.start.route,
                 modifier = Modifier.weight(1f).padding(horizontal = Dimens.margin),
             ) {
-                composable(DeckDestination.MAIN.route) { MainScreen() }
+                composable(DeckDestination.MAIN.route) {
+                    MainScreen(
+                        onOpen = { nav.switchTab(DeckDestination.LIBRARY) },
+                        onOpenEq = { nav.switchTab(DeckDestination.EQ) },
+                    )
+                }
                 composable(DeckDestination.EQ.route) { EqScreen() }
                 composable(DeckDestination.PLAYLIST.route) { PlaylistScreen() }
                 composable(DeckDestination.LIBRARY.route) {

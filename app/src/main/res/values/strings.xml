@@ -64,4 +64,56 @@
     <string name="lib_cd_more">More options</string>
     <string name="lib_cd_up">Up one level</string>
     <string name="lib_cd_kilobits">%1$d kilobits</string>
+    <string name="deck_chassis" translatable="false">CHASSIS 2.91 // AMP-DEC</string>
+    <string name="deck_dsp_ready">DSP READY</string>
+    <string name="deck_dsp_bypass">DSP BYPASS</string>
+    <string name="deck_dsp_na">DSP N/A</string>
+    <string name="deck_brand" translatable="false">CANH AMP</string>
+    <string name="deck_pro" translatable="false">PRO V0.1</string>
+    <string name="deck_time_elapsed">TIME [ELAPSED]</string>
+    <string name="deck_time_remaining">TIME [REMAIN]</string>
+    <string name="deck_audio_on">AUDIO ON</string>
+    <string name="deck_buffering">BUFFERING</string>
+    <string name="deck_seek">SONG POS SEEK</string>
+    <string name="deck_volume">VOLUME</string>
+    <string name="deck_balance">BALANCE</string>
+    <string name="deck_center">CENTER</string>
+    <string name="deck_spectrum">SPECTRUM RTA</string>
+    <string name="deck_mode_bar">MODE: BAR</string>
+    <string name="deck_mode_wave">MODE: WAVE</string>
+    <string name="deck_kbps">KBPS</string>
+    <string name="deck_khz">KHZ</string>
+    <string name="deck_bitrate">BITRATE</string>
+    <string name="deck_sampling">SAMPLING</string>
+    <string name="deck_channels">CHANNELS</string>
+    <string name="deck_off">OFF</string>
+    <string name="deck_min">MIN</string>
+    <string name="deck_mid">MID</string>
+    <string name="deck_max">MAX</string>
+    <string name="deck_left">L</string>
+    <string name="deck_centre_short">C</string>
+    <string name="deck_right">R</string>
+    <string name="deck_transport">TRANSPORT DECK // PRECISION TACTILE</string>
+    <string name="deck_motor">MOTOR RUNNING</string>
+    <string name="btn_prev">PREV</string>
+    <string name="btn_play">PLAY</string>
+    <string name="btn_pause">PAUSE</string>
+    <string name="btn_stop">STOP</string>
+    <string name="btn_next">NEXT</string>
+    <string name="btn_open">OPEN</string>
+    <string name="btn_info">INFO</string>
+    <string name="toggle_shuffle">SHUFFLE</string>
+    <string name="toggle_repeat">REPEAT</string>
+    <string name="toggle_repeat_all">REPEAT ALL</string>
+    <string name="toggle_repeat_one">REPEAT 1</string>
+    <string name="deck_no_track">NO TRACK LOADED</string>
+    <string name="err_cannot_read">ERR: CANNOT READ FILE</string>
+    <string name="marquee_idle">*** CANH AMP *** LOAD A TRACK FROM THE LIBRARY ***</string>
+    <string name="deck_serial" translatable="false">SERIAL NO: CA-2026-001</string>
+    <string name="deck_cd_timer">Toggle elapsed and remaining time</string>
+    <string name="deck_cd_mode">Change visualizer mode</string>
+    <string name="deck_cd_volume">Volume</string>
+    <string name="deck_cd_balance">Balance</string>
+    <string name="deck_cd_seek">Song position</string>
+    <string name="deck_cd_info">Track details</string>
 </resources>

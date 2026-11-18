@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.media3.common.C
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
@@ -16,7 +17,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -40,7 +44,12 @@ class PlayerConnection(
     private var connecting: Job? = null
     private var ticker: Job? = null
 
+    private val _errors = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
     val nowPlaying: StateFlow<NowPlaying> = _nowPlaying
+
+    /** One event per playback failure (B27); the UI shows the error text for 3 s. */
+    val errors: SharedFlow<Unit> = _errors
     val connected: StateFlow<Boolean> = _connected
 
     /** Idempotent. Retries with a growing delay until the session answers. */
@@ -88,6 +97,10 @@ class PlayerConnection(
                     refresh(c)
                     updateTicker(c)
                 }
+
+                override fun onPlayerError(error: PlaybackException) {
+                    _errors.tryEmit(Unit)
+                }
             },
         )
         _connected.value = true
@@ -128,6 +141,7 @@ class PlayerConnection(
             artist = meta?.artist?.toString().orEmpty(),
             album = meta?.albumTitle?.toString().orEmpty(),
             isPlaying = c.isPlaying,
+            buffering = c.playbackState == Player.STATE_BUFFERING,
             positionMs = c.currentPosition.coerceAtLeast(0L),
             durationMs = c.duration.takeIf { it != C.TIME_UNSET && it > 0 } ?: extraDuration,
             bitrateKbps = audio?.let { NowPlayingMapper.bitrateKbps(it.bitrate) } ?: extraKbps,
@@ -138,6 +152,8 @@ class PlayerConnection(
             shuffle = c.shuffleModeEnabled,
             repeat = NowPlayingMapper.repeatFromPlayer(c.repeatMode),
             volume = c.volume,
+            artworkData = c.mediaMetadata.artworkData,
+            mimeType = audio?.sampleMimeType,
         )
     }
 
