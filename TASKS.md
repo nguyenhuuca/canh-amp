@@ -19,15 +19,15 @@
 
 ### M3: queue, playlists, SAF
 - [x] T12 Queue persistence and restore c101e4d
-- [~] T13 Playlist screen
+- [x] T13 Playlist screen 338b801
 - [x] T14 M3U codec 335ae12
-- [~] T15 Playlist save and load
+- [x] T15 Playlist save and load 338b801
 - [ ] T16 SAF folder import
 
 ### M4: DSP and EQ
 - [x] T17 DSP core and 10-band EQ 0a41880
 - [ ] T18 Balance, limiter, auto-preamp, player wiring
-- [ ] T19 EQ screen and presets
+- [~] T19 EQ screen and presets
 
 ### M5–M7: visualizer, themes, polish, release
 - [x] T20 Spectrum analyser and SpectrumView 57e867f
