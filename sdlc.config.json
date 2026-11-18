@@ -1,7 +1,13 @@
 {
   "deployBranch": "main",
   "maxLoc": 400,
-  "components": [],
+  "components": [
+    {
+      "name": "android",
+      "path": ".",
+      "gates": ["./gradlew testDebugUnitTest lintDebug --no-daemon"]
+    }
+  ],
   "smoke": null,
   "buildWorkflow": null,
   "tracking": {
