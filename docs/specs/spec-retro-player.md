@@ -160,7 +160,7 @@ Position updates come from a ticker at 4 Hz while playing (UI side).
 ### Library: R1–R7
 
 - **B1** On first open of Library, if the permission is missing, show the rationale panel. Request the permission only when "Grant" is tapped. After a permanent denial, the button opens the app's system settings. (R2)
-- **B2** A scan queries `MediaStore.Audio.Media` with `IS_MUSIC != 0 OR IS_AUDIOBOOK = 0`. It excludes ringtones, notifications and alarms (`IS_RINGTONE`, `IS_NOTIFICATION`, `IS_ALARM` = 0) and files shorter than 10 s. It runs in one cursor pass on `Dispatchers.IO`. (R1)
+- **B2** A scan queries `MediaStore.Audio.Media` with `IS_MUSIC != 0` (music only: no voice recordings, podcasts or audiobooks). It excludes ringtones, notifications and alarms (`IS_RINGTONE`, `IS_NOTIFICATION`, `IS_ALARM` = 0) and files shorter than 10 s. It runs in one cursor pass on `Dispatchers.IO`. (R1)
 - **B3** Map each row to a `tracks` row:
   - `format` from the extension of `DISPLAY_NAME` (else from `MIME_TYPE`);
   - `bitrateKbps` from `BITRATE` on API 30+, else `sizeBytes * 8 / durationMs` rounded;

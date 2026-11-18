@@ -9,11 +9,13 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.canhamp.data.library.ScanGenerationStore
 import com.canhamp.ui.theme.ThemeId
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class SettingsRepository(private val store: DataStore<Preferences>) {
+class SettingsRepository(private val store: DataStore<Preferences>) : ScanGenerationStore {
 
     val settings: Flow<Settings> = store.data.map { prefs ->
         SettingsMapper.fromPreferences(prefs.asMap().mapKeys { it.key.name })
@@ -46,7 +48,10 @@ class SettingsRepository(private val store: DataStore<Preferences>) {
         it[QUEUE_POSITION_MS] = ms.coerceAtLeast(0L)
     }
 
-    suspend fun setScanGeneration(generation: Long) = put { it[SCAN_GENERATION] = generation }
+    override suspend fun scanGeneration(): Long = settings.first().scanGeneration
+    override suspend fun setScanGeneration(generation: Long) = put { it[SCAN_GENERATION] = generation }
+    override suspend fun lastScanAtMs(): Long = settings.first().lastScanAtMs
+    override suspend fun setLastScanAtMs(ms: Long) = put { it[LAST_SCAN_AT_MS] = ms.coerceAtLeast(0L) }
 
     private suspend fun put(block: (MutablePreferences) -> Unit) {
         store.edit { block(it) }
@@ -70,5 +75,6 @@ class SettingsRepository(private val store: DataStore<Preferences>) {
         val QUEUE_INDEX = intPreferencesKey(SettingsMapper.QUEUE_INDEX)
         val QUEUE_POSITION_MS = longPreferencesKey(SettingsMapper.QUEUE_POSITION_MS)
         val SCAN_GENERATION = longPreferencesKey(SettingsMapper.SCAN_GENERATION)
+        val LAST_SCAN_AT_MS = longPreferencesKey(SettingsMapper.LAST_SCAN_AT_MS)
     }
 }

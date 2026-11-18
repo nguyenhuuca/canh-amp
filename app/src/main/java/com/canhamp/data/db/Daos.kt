@@ -25,9 +25,9 @@ interface TrackDao {
     @Query("SELECT id FROM tracks WHERE uri = :uri")
     suspend fun idForUri(uri: String): Long?
 
-    /** Inserts new rows; rows whose uri already exists are updated in place and keep their id. */
+    /** Inserts new rows; rows whose uri already exists are updated in place and keep their id. Returns how many rows were newly inserted. */
     @Transaction
-    suspend fun upsertByUri(tracks: List<TrackEntity>) {
+    suspend fun upsertByUri(tracks: List<TrackEntity>): Int {
         val results = insertIgnore(tracks)
         val toUpdate = ArrayList<TrackEntity>()
         for ((i, rowId) in results.withIndex()) {
@@ -37,6 +37,7 @@ interface TrackDao {
             }
         }
         if (toUpdate.isNotEmpty()) update(toUpdate)
+        return tracks.size - toUpdate.size
     }
 
     @Query("DELETE FROM tracks WHERE source = :source AND scanGeneration < :generation")

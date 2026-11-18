@@ -25,6 +25,7 @@ object SettingsMapper {
     const val QUEUE_INDEX = "queueIndex"
     const val QUEUE_POSITION_MS = "queuePositionMs"
     const val SCAN_GENERATION = "scanGeneration"
+    const val LAST_SCAN_AT_MS = "lastScanAtMs"
 
     /** Ten integers clamped to -12..12; null, wrong length or any non-integer yields zeros. */
     fun parseGains(csv: String?): IntArray {
@@ -70,6 +71,7 @@ object SettingsMapper {
             queueIndex = int(QUEUE_INDEX, d.queueIndex).coerceAtLeast(0),
             queuePositionMs = (map[QUEUE_POSITION_MS] as? Long ?: d.queuePositionMs).coerceAtLeast(0L),
             scanGeneration = map[SCAN_GENERATION] as? Long ?: d.scanGeneration,
+            lastScanAtMs = (map[LAST_SCAN_AT_MS] as? Long ?: d.lastScanAtMs).coerceAtLeast(0L),
         )
     }
 
