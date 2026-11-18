@@ -10,8 +10,8 @@
 - [x] T5 App shell and navigation 8d4e7c5
 
 ### M2: library and playback
-- [ ] T6 Persistence layer (Room v1 + DataStore)
-- [ ] T7 MediaStore scan
+- [x] T6 Persistence layer (Room v1 + DataStore) 764a4a7
+- [~] T7 MediaStore scan
 - [ ] T8 Library screen
 - [ ] T9 Playback service and connection
 - [ ] T10 Main deck screen
@@ -20,12 +20,12 @@
 ### M3: queue, playlists, SAF
 - [ ] T12 Queue persistence and restore
 - [ ] T13 Playlist screen
-- [ ] T14 M3U codec
+- [x] T14 M3U codec 335ae12
 - [ ] T15 Playlist save and load
 - [ ] T16 SAF folder import
 
 ### M4: DSP and EQ
-- [ ] T17 DSP core and 10-band EQ
+- [x] T17 DSP core and 10-band EQ 0a41880
 - [ ] T18 Balance, limiter, auto-preamp, player wiring
 - [ ] T19 EQ screen and presets
 
