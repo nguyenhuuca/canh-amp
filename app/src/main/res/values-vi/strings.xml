@@ -42,6 +42,10 @@
     <string name="lib_add_queue">THÊM VÀO DANH SÁCH</string>
     <string name="lib_play_next">PHÁT TIẾP THEO</string>
     <string name="lib_details">CHI TIẾT BÀI</string>
+    <string name="lib_added_queue">ĐÃ THÊM VÀO DANH SÁCH</string>
+    <string name="lib_added_next">PHÁT TIẾP THEO</string>
+    <string name="lib_details_placeholder">Chi tiết bài sẽ có ở bản sau.</string>
+    <string name="lib_sheet_close">ĐÓNG</string>
     <string name="lib_imported">ĐÃ THÊM %1$d BÀI</string>
     <string name="lib_import_empty">THƯ MỤC KHÔNG CÓ NHẠC</string>
     <string name="lib_import_dup">THƯ MỤC ĐÃ CÓ</string>

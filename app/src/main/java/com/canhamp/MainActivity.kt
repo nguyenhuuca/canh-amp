@@ -11,6 +11,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        (application as CanhAmpApp).container.playerConnection.connect()
         setContent { CanhAmpTheme { AppNavGraph() } }
     }
 }

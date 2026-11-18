@@ -43,6 +43,10 @@
     <string name="lib_add_queue">ADD TO QUEUE</string>
     <string name="lib_play_next">PLAY NEXT</string>
     <string name="lib_details">TRACK DETAILS &amp; TAGS</string>
+    <string name="lib_added_queue">ADDED TO QUEUE</string>
+    <string name="lib_added_next">PLAYS NEXT</string>
+    <string name="lib_details_placeholder">Track details arrive in a later build.</string>
+    <string name="lib_sheet_close">CLOSE</string>
     <string name="lib_imported">IMPORTED %1$d TRACKS</string>
     <string name="lib_import_empty">NO AUDIO IN FOLDER</string>
     <string name="lib_import_dup">FOLDER ALREADY IMPORTED</string>

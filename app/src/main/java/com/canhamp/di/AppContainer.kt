@@ -4,12 +4,16 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.media3.common.util.UnstableApi
 import androidx.room.Room
 import com.canhamp.data.db.CanhAmpDatabase
 import com.canhamp.data.library.LibraryRepository
 import com.canhamp.data.library.MediaStoreScanner
 import com.canhamp.data.library.TrackDaoStore
 import com.canhamp.data.settings.SettingsRepository
+import com.canhamp.playback.PlayerConnection
+import com.canhamp.playback.dsp.DspEngine
+import com.canhamp.playback.dsp.SpectrumTapProcessor
 import com.canhamp.util.AndroidLogger
 import com.canhamp.util.Logger
 import com.canhamp.util.audioPermission
@@ -33,6 +37,13 @@ class AppContainer(val context: Context) {
     val settingsRepository: SettingsRepository by lazy { SettingsRepository(appContext.settingsStore) }
 
     val logger: Logger by lazy { AndroidLogger() }
+
+    /** One engine and one spectrum tap for the whole process (ADR-0001, ADR-0002). */
+    val dspEngine: DspEngine by lazy { DspEngine() }
+    @androidx.annotation.OptIn(UnstableApi::class)
+    val spectrumTap: SpectrumTapProcessor by lazy { SpectrumTapProcessor(dspEngine.spectrumRing) }
+
+    val playerConnection: PlayerConnection by lazy { PlayerConnection(appContext, settingsRepository, logger) }
 
     val libraryRepository: LibraryRepository by lazy {
         val permission = audioPermission()
