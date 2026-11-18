@@ -11,26 +11,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-
-private val Phosphor = Color(0xFF00FF41)
-private val Panel = Color(0xFF101417)
+import com.canhamp.ui.theme.CanhAmpTheme
+import com.canhamp.ui.theme.Deck
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { Splash() }
+        setContent { CanhAmpTheme { Splash() } }
     }
 }
 
 @Composable
 private fun Splash() {
     Box(
-        modifier = Modifier.fillMaxSize().background(Panel),
+        modifier = Modifier.fillMaxSize().background(Deck.colors.surface),
         contentAlignment = Alignment.Center,
     ) {
-        Text(text = stringResource(R.string.app_tagline), color = Phosphor)
+        Text(
+            text = stringResource(R.string.app_tagline),
+            color = Deck.colors.primaryContainer,
+            style = Deck.type.titleMd,
+        )
     }
 }
