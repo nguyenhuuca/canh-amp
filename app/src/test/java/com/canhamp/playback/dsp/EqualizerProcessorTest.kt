@@ -164,6 +164,35 @@ class EqualizerProcessorTest {
         assertTrue("max diff $maxDiff", maxDiff < 328)
     }
 
+    /** Largest sample-to-sample step of [changed] that is not also in [ref] (left channel). */
+    private fun maxStepDeviation(changed: ShortArray, ref: ShortArray): Int {
+        var worst = 0
+        var i = 2
+        while (i < changed.size) {
+            val dc = changed[i] - changed[i - 2]
+            val dr = ref[i] - ref[i - 2]
+            worst = maxOf(worst, abs(dc - dr))
+            i += 2
+        }
+        return worst
+    }
+
+    /** A 0 to +12 dB jump on a far band during a loud tone must not produce a transient (gain smoothing). */
+    @Test
+    fun largeJumpOfFarBandDoesNotClick() {
+        val fs = 44100
+        val input = sine(200.0, fs, fs, 2, amp = 0.5)
+        val ref = run(EqualizerProcessor(DspEngine(), false), input, fs, 2)
+
+        val engine = DspEngine()
+        val changed = run(EqualizerProcessor(engine, false), input, fs, 2) { n ->
+            if (n == 20) engine.update { onlyBand(9, 12) }
+        }
+        val dev = maxStepDeviation(changed, ref)
+        // -40 dBFS = 328 LSB
+        assertTrue("step deviation $dev", dev < 328)
+    }
+
     @Test
     fun unsupportedEncodingReportsAndIsInactive() {
         val engine = DspEngine()
