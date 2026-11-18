@@ -11,9 +11,9 @@
 
 ### M2: library and playback
 - [x] T6 Persistence layer (Room v1 + DataStore) 764a4a7
-- [~] T7 MediaStore scan
-- [ ] T8 Library screen
-- [ ] T9 Playback service and connection
+- [x] T7 MediaStore scan 47ae583
+- [x] T8 Library screen fad00b9
+- [~] T9 Playback service and connection
 - [ ] T10 Main deck screen
 - [ ] T11 Track details and error handling
 
