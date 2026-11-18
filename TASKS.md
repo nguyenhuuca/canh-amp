@@ -14,11 +14,11 @@
 - [x] T7 MediaStore scan 47ae583
 - [x] T8 Library screen fad00b9
 - [x] T9 Playback service and connection f450afc
-- [~] T10 Main deck screen
-- [ ] T11 Track details and error handling
+- [x] T10 Main deck screen 57e867f
+- [~] T11 Track details and error handling
 
 ### M3: queue, playlists, SAF
-- [ ] T12 Queue persistence and restore
+- [~] T12 Queue persistence and restore
 - [ ] T13 Playlist screen
 - [x] T14 M3U codec 335ae12
 - [ ] T15 Playlist save and load
@@ -30,7 +30,7 @@
 - [ ] T19 EQ screen and presets
 
 ### M5–M7: visualizer, themes, polish, release
-- [ ] T20 Spectrum analyser and SpectrumView
+- [x] T20 Spectrum analyser and SpectrumView 57e867f
 - [ ] T21 Skins screen and theme apply
 - [ ] T22 Accessibility, storage bar and polish
 - [ ] T23 v0.1.0 release (owner device check + release.yml)
