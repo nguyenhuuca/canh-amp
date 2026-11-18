@@ -1,0 +1,36 @@
+# Tasks
+
+## Canh Amp v0.1.0 ([plan](docs/plans/plan-retro-player.md))
+
+### M1: skeleton, CI, design system
+- [ ] T1 Gradle project skeleton
+- [ ] T2 CI workflows and guard checks
+- [ ] T3 Theme tokens and 4 palettes
+- [ ] T4 Deck components I
+- [ ] T5 App shell and navigation
+
+### M2: library and playback
+- [ ] T6 Persistence layer (Room v1 + DataStore)
+- [ ] T7 MediaStore scan
+- [ ] T8 Library screen
+- [ ] T9 Playback service and connection
+- [ ] T10 Main deck screen
+- [ ] T11 Track details and error handling
+
+### M3: queue, playlists, SAF
+- [ ] T12 Queue persistence and restore
+- [ ] T13 Playlist screen
+- [ ] T14 M3U codec
+- [ ] T15 Playlist save and load
+- [ ] T16 SAF folder import
+
+### M4: DSP and EQ
+- [ ] T17 DSP core and 10-band EQ
+- [ ] T18 Balance, limiter, auto-preamp, player wiring
+- [ ] T19 EQ screen and presets
+
+### M5–M7: visualizer, themes, polish, release
+- [ ] T20 Spectrum analyser and SpectrumView
+- [ ] T21 Skins screen and theme apply
+- [ ] T22 Accessibility, storage bar and polish
+- [ ] T23 v0.1.0 release (owner device check + release.yml)
