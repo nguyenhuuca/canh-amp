@@ -1,6 +1,7 @@
 package com.canhamp.playback.dsp
 
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -20,6 +21,20 @@ class DspEngine {
 
     val config: StateFlow<DspConfig> = _config
     val status: StateFlow<DspStatus> = _status
+
+    /** Lock-free ring the spectrum tap writes into (ADR-0002). */
+    val spectrumRing = RingBuffer(4096)
+
+    /** Set by buildDspChain so the analyser knows the live sample rate. */
+    @Volatile
+    var spectrumSampleRate: () -> Int = { 0 }
+
+    /** Cold flow of analyser frames; the UI collects it with WhileSubscribed. */
+    fun spectrumFrames(): Flow<SpectrumFrame> = SpectrumAnalyzer(
+        ring = spectrumRing,
+        sampleRateProvider = { spectrumSampleRate() },
+        clock = { System.nanoTime() / 1_000_000L },
+    ).frames
 
     val version: Long get() = ref.get().version
 
