@@ -22,15 +22,15 @@
 - [x] T13 Playlist screen 338b801
 - [x] T14 M3U codec 335ae12
 - [x] T15 Playlist save and load 338b801
-- [ ] T16 SAF folder import
+- [~] T16 SAF folder import
 
 ### M4: DSP and EQ
 - [x] T17 DSP core and 10-band EQ 0a41880
 - [ ] T18 Balance, limiter, auto-preamp, player wiring
-- [~] T19 EQ screen and presets
+- [x] T19 EQ screen and presets f0d3019
 
 ### M5–M7: visualizer, themes, polish, release
 - [x] T20 Spectrum analyser and SpectrumView 57e867f
-- [ ] T21 Skins screen and theme apply
+- [~] T21 Skins screen and theme apply
 - [ ] T22 Accessibility, storage bar and polish
 - [ ] T23 v0.1.0 release (owner device check + release.yml)
