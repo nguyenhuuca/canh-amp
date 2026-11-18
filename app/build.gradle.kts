@@ -37,8 +37,8 @@ android {
             create("ciDebug") {
                 storeFile = rootProject.file(debugKeystorePath!!)
                 storePassword = System.getenv("DEBUG_KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("DEBUG_KEY_ALIAS") ?: "androiddebugkey"
-                keyPassword = System.getenv("DEBUG_KEY_PASSWORD")
+                keyAlias = System.getenv("DEBUG_KEY_ALIAS")?.takeIf { it.isNotBlank() } ?: "androiddebugkey"
+                keyPassword = System.getenv("DEBUG_KEY_PASSWORD")?.takeIf { it.isNotBlank() }
                     ?: System.getenv("DEBUG_KEYSTORE_PASSWORD")
             }
         }
