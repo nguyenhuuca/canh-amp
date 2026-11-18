@@ -1,7 +1,8 @@
 task: Canh Amp - retro MP3 player Android app
 status: in_progress
-progress: 30
-done: T1 skeleton 4e87c45; T2 CI 455b9ec; T3 theme c59cb1d; T4 components 6d8c8f0; T5 shell 8d4e7c5; M1 review fixes
-next: push M1 (owner yes); T6 persistence; T7 MediaStore scan; T8 Library screen
+progress: 62
+done: M1 T1-T5; T6 Room; T7 scan; T8 Library; T9 playback; T10+T20 deck+spectrum; T11+T12 details+queue; T14 M3U; T17+T18a DSP
+doing: T13+T15 Playlist screen + M3U save/load
+next: T13+T15 playlist; T19 EQ screen; T16 SAF import; T21 skins; T22 polish; T23 release (owner)
 plan: docs/plans/plan-retro-player.md
-updated: 2026-11-18 20:33
+updated: 2026-11-18 21:39
