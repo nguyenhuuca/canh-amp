@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -126,7 +126,7 @@ fun QueueRowItem(
             contentAlignment = Alignment.Center,
         ) {
             if (row.isPlaying) {
-                Icon(Icons.Filled.VolumeUp, contentDescription = null, tint = fg, modifier = Modifier.size(16.dp))
+                Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, tint = fg, modifier = Modifier.size(16.dp))
             } else {
                 Text(
                     String.format(Locale.ROOT, "%03d", row.index + 1),

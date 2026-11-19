@@ -60,7 +60,6 @@
     <string name="lib_storage_root" translatable="false">/INTERNAL STORAGE/MUSIC</string>
     <string name="lib_db_ok" translatable="false">DATABASE: V1 OK</string>
     <string name="lib_cd_clear">Clear search</string>
-    <string name="lib_cd_more">More options</string>
     <string name="lib_cd_up">Up one level</string>
     <string name="lib_cd_kilobits">%1$d kilobits</string>
     <string name="deck_chassis" translatable="false">CHASSIS 2.91 // AMP-DEC</string>
@@ -164,7 +163,6 @@
     <string name="pl_loaded">LOADED %1$d, MISSING %2$d</string>
     <string name="pl_invalid">NOT A VALID PLAYLIST</string>
     <string name="pl_too_large">FILE TOO LARGE</string>
-    <string name="pl_full">QUEUE FULL (%1$d)</string>
     <string name="pl_saved">SAVED %1$d TRACKS</string>
     <string name="pl_save_failed">SAVE FAILED</string>
     <string name="pl_replace_confirm">REPLACE CURRENT QUEUE?</string>
@@ -176,7 +174,6 @@
     <string name="pl_col_time">TIME</string>
     <string name="pl_read_only">READ ONLY</string>
     <string name="pl_export_banner">PLAYLIST EXPORT ENGINE: Supports .M3U, .M3U8</string>
-    <string name="pl_pick_hint">PICK TRACKS TO ADD</string>
     <string name="pl_pick_dir_hint">PICK A FOLDER TO ADD</string>
     <string name="pl_added_n">ADDED %1$d TO QUEUE</string>
     <string name="pl_cd_row">%1$d of %2$d</string>

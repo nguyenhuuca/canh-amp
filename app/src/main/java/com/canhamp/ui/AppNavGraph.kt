@@ -3,7 +3,17 @@ package com.canhamp.ui
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,8 +21,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.QueueMusic
 import androidx.compose.material.icons.filled.Radio
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +54,7 @@ import com.canhamp.ui.components.DeckHeader
 import com.canhamp.ui.components.DeckNavBar
 import com.canhamp.ui.components.MiniPlayerBar
 import com.canhamp.ui.components.RecessedWell
+import com.canhamp.ui.components.rememberReducedMotion
 import com.canhamp.ui.components.VfdText
 import com.canhamp.ui.eq.EqScreen
 import com.canhamp.playback.QueueEntry
@@ -71,7 +82,7 @@ enum class DeckDestination(
 ) {
     MAIN("main", R.string.nav_main, R.string.subtitle_main, Icons.Filled.Radio),
     EQ("eq", R.string.nav_eq, R.string.subtitle_eq, Icons.Filled.Equalizer),
-    PLAYLIST("playlist", R.string.nav_playlist, R.string.subtitle_playlist, Icons.Filled.QueueMusic),
+    PLAYLIST("playlist", R.string.nav_playlist, R.string.subtitle_playlist, Icons.AutoMirrored.Filled.QueueMusic),
     LIBRARY("library", R.string.nav_library, R.string.subtitle_library, Icons.Filled.FolderOpen),
     SKINS("skins", R.string.nav_skins, R.string.subtitle_skins, Icons.Filled.Palette),
     ;
@@ -84,6 +95,8 @@ enum class DeckDestination(
 }
 
 private const val TOAST_MS = 2_000L
+private const val OFFLINE_AFTER_MS = 3_000L
+private const val FADE_MS = 700
 
 /** Where system back goes from [current]: MAIN for any other tab, null on MAIN (the app exits). */
 fun backTarget(current: DeckDestination): DeckDestination? =
@@ -138,16 +151,38 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
         }
     }
 
+    // Error state (app shell): the engine did not connect within 3 s; clears as soon as it does.
+    val connected by player.connected.collectAsState()
+    var engineOffline by remember { mutableStateOf(false) }
+    LaunchedEffect(connected) {
+        if (connected) {
+            engineOffline = false
+        } else {
+            delay(OFFLINE_AFTER_MS)
+            engineOffline = true
+        }
+    }
+    val reducedMotion = rememberReducedMotion()
+
     val target = backTarget(current)
     BackHandler(enabled = target != null) { target?.let(nav::switchTab) }
 
     Box(Modifier.fillMaxSize().background(Deck.colors.surface), contentAlignment = Alignment.TopCenter) {
         Column(Modifier.fillMaxSize().widthIn(max = 480.dp)) {
-            DeckHeader(subtitle = stringResource(current.subtitleRes), stereo = stereo)
+            DeckHeader(
+                subtitle = stringResource(if (engineOffline) R.string.err_engine_offline else current.subtitleRes),
+                stereo = stereo,
+                subtitleError = engineOffline,
+            )
             NavHost(
                 navController = nav,
                 startDestination = DeckDestination.start.route,
-                modifier = Modifier.weight(1f).padding(horizontal = Dimens.margin),
+                modifier = Modifier
+                    .weight(1f)
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
+                    .padding(horizontal = Dimens.margin),
+                enterTransition = { if (reducedMotion) EnterTransition.None else fadeIn(tween(FADE_MS)) },
+                exitTransition = { if (reducedMotion) ExitTransition.None else fadeOut(tween(FADE_MS)) },
             ) {
                 composable(DeckDestination.MAIN.route) {
                     MainScreen(

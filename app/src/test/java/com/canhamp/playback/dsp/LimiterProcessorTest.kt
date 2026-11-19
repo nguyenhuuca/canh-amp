@@ -3,6 +3,7 @@ package com.canhamp.playback.dsp
 import androidx.media3.common.C
 import androidx.media3.common.audio.AudioProcessor
 import androidx.media3.common.audio.AudioProcessor.AudioFormat
+import androidx.media3.common.audio.ToInt16PcmAudioProcessor
 import androidx.media3.common.util.UnstableApi
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -10,6 +11,7 @@ import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sin
 import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -97,10 +99,34 @@ class LimiterProcessorTest {
     }
 
     @Test
-    fun chainOrderIsEqualizerBalanceLimiter() {
+    fun chainOrderIsConverterEqualizerBalanceLimiter() {
         val chain = buildDspChain(DspEngine())
-        assertTrue(chain[0] is EqualizerProcessor)
-        assertTrue(chain[1] is BalanceProcessor)
-        assertTrue(chain[2] is LimiterProcessor)
+        assertTrue(chain[0] is ToInt16PcmAudioProcessor)
+        assertTrue(chain[1] is EqualizerProcessor)
+        assertTrue(chain[2] is BalanceProcessor)
+        assertTrue(chain[3] is LimiterProcessor)
+    }
+
+    @Test
+    fun chainIsInactiveConverterForSixteenBitInput() {
+        val chain = buildDspChain(DspEngine())
+        val out = chain[0].configure(AudioFormat(fs, 2, C.ENCODING_PCM_16BIT))
+        assertFalse(chain[0].isActive)
+        assertEquals(AudioFormat.NOT_SET, out)
+    }
+
+    @Test
+    fun twentyFourBitInputReachesEqualizerAsSixteenBit() {
+        val chain = buildDspChain(DspEngine())
+        var format = AudioFormat(fs, 2, C.ENCODING_PCM_24BIT)
+        // As the audio sink does: an inactive processor passes its input on unchanged.
+        for (p in chain) {
+            val out = p.configure(format)
+            if (p.isActive) format = out
+        }
+        assertTrue(chain[0].isActive)
+        assertEquals(C.ENCODING_PCM_16BIT, format.encoding)
+        assertTrue(chain[1].isActive)
+        assertTrue(chain[3].isActive)
     }
 }

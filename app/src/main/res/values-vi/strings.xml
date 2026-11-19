@@ -57,7 +57,6 @@
     <string name="lib_files">%1$d FILE</string>
     <string name="lib_tracks_count">%1$d BÀI</string>
     <string name="lib_cd_clear">Xóa tìm kiếm</string>
-    <string name="lib_cd_more">Thêm tùy chọn</string>
     <string name="lib_cd_up">Lên một cấp</string>
     <string name="lib_cd_kilobits">%1$d kilobit</string>
     <string name="deck_dsp_ready">DSP SẴN SÀNG</string>
@@ -155,7 +154,6 @@
     <string name="pl_loaded">ĐÃ MỞ %1$d, THIẾU %2$d</string>
     <string name="pl_invalid">FILE KHÔNG HỢP LỆ</string>
     <string name="pl_too_large">FILE QUÁ LỚN</string>
-    <string name="pl_full">ĐẦY (%1$d)</string>
     <string name="pl_saved">ĐÃ LƯU %1$d BÀI</string>
     <string name="pl_save_failed">LƯU THẤT BẠI</string>
     <string name="pl_replace_confirm">THAY DANH SÁCH HIỆN TẠI?</string>
@@ -167,7 +165,6 @@
     <string name="pl_col_time">GIỜ</string>
     <string name="pl_read_only">CHỈ ĐỌC</string>
     <string name="pl_export_banner">XUẤT DANH SÁCH: hỗ trợ .M3U, .M3U8</string>
-    <string name="pl_pick_hint">CHỌN BÀI ĐỂ THÊM</string>
     <string name="pl_pick_dir_hint">CHỌN THƯ MỤC ĐỂ THÊM</string>
     <string name="pl_added_n">ĐÃ THÊM %1$d BÀI</string>
     <string name="pl_cd_row">%1$d trên %2$d</string>

@@ -21,6 +21,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.canhamp.R
 import com.canhamp.data.settings.TimeMode
@@ -77,7 +78,7 @@ private fun StatusRow(state: MainUiState) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Row(horizontalArrangement = Arrangement.spacedBy(Dimens.spaceMd)) {
             VfdText(stringResource(R.string.deck_brand), style = Deck.type.labelMd)
-            Text(stringResource(R.string.deck_pro), style = Deck.type.labelMd, color = c.secondaryContainer)
+            Text(stringResource(R.string.deck_pro), style = Deck.type.labelMd, color = c.secondaryContainer, maxLines = 1)
         }
         val status = when {
             state.now.buffering && state.hasQueue -> R.string.deck_buffering
@@ -106,6 +107,8 @@ private fun TimerBlock(state: MainUiState, onToggle: () -> Unit, modifier: Modif
                 DeckFormat.trackNumber(now.index, now.queueSize),
                 style = Deck.type.labelMd,
                 color = c.secondaryContainer,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth(),
             )
             // Polite live region on the label only: it changes on toggle, not every second.
@@ -113,6 +116,8 @@ private fun TimerBlock(state: MainUiState, onToggle: () -> Unit, modifier: Modif
                 modeLabel,
                 style = Deck.type.labelMd,
                 color = c.secondaryContainer,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite },
             )
             SegmentDigits(DeckFormat.timerText(now, state.timeMode), Modifier.padding(vertical = Dimens.spaceSm))
@@ -127,7 +132,7 @@ private fun TimerBlock(state: MainUiState, onToggle: () -> Unit, modifier: Modif
 @Composable
 private fun LabelValue(label: String, value: String) {
     Column {
-        Text(label, style = Deck.type.labelSm, color = Deck.colors.secondaryContainer)
+        Text(label, style = Deck.type.labelSm, color = Deck.colors.secondaryContainer, maxLines = 1, overflow = TextOverflow.Ellipsis)
         VfdText(value, style = Deck.type.labelLg)
     }
 }
@@ -216,6 +221,7 @@ private fun Badge(label: String, value: String, lit: Boolean, modifier: Modifier
             color = if (lit) c.primaryContainer else c.onSurfaceVariant,
             textAlign = TextAlign.Center,
             maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
         Text(
             value,
@@ -223,6 +229,7 @@ private fun Badge(label: String, value: String, lit: Boolean, modifier: Modifier
             color = if (lit) c.primaryContainer else c.onSurface,
             textAlign = TextAlign.Center,
             maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

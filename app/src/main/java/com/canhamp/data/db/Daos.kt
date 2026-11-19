@@ -78,6 +78,10 @@ interface TrackDao {
     @Query("SELECT COALESCE(SUM(sizeBytes), 0) FROM tracks")
     suspend fun sumSize(): Long
 
+    /** The same total as [sumSize], re-emitted when the library changes (B12 storage bar). */
+    @Query("SELECT COALESCE(SUM(sizeBytes), 0) FROM tracks")
+    fun observeSumSize(): Flow<Long>
+
     @Query("SELECT * FROM tracks WHERE $SEARCH ORDER BY title COLLATE NOCASE ASC, id ASC")
     fun pagingAll(pattern: String): PagingSource<Int, TrackEntity>
 

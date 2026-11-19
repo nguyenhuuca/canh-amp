@@ -8,12 +8,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import com.canhamp.ui.AppNavGraph
+import com.canhamp.util.JankMonitor
 import com.canhamp.ui.theme.CanhAmpTheme
 import com.canhamp.ui.theme.ThemeId
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 class MainActivity : ComponentActivity() {
+    private var jank: JankMonitor? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,5 +31,17 @@ class MainActivity : ComponentActivity() {
                 .collectAsState(initial = false)
             CanhAmpTheme(themeId = theme, preserveEqColors = preserve) { AppNavGraph() }
         }
+        // Debug builds only; created once the window has content so it can hook the first frame.
+        if (BuildConfig.DEBUG) jank = JankMonitor(window, container.logger)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        jank?.start()
+    }
+
+    override fun onStop() {
+        jank?.stop()
+        super.onStop()
     }
 }

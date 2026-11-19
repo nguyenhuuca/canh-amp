@@ -111,6 +111,7 @@ fun LibraryScreen(
     val scanning by vm.scanning.collectAsState()
     val everScanned by vm.everScanned.collectAsState()
     val groups by vm.groups.collectAsState()
+    val storage by vm.storage.collectAsState()
     val safFolders by vm.safFolders.collectAsState()
     val items = vm.tracks.collectAsLazyPagingItems()
 
@@ -193,6 +194,7 @@ fun LibraryScreen(
                         scanning = scanning,
                         indexed = counts.tracks,
                         message = message,
+                        storage = storage,
                         onRescan = vm::rescan,
                     )
                 }
@@ -335,7 +337,7 @@ private fun LazyListScope.listBody(
 }
 
 @Composable
-private fun StorageBay(scanning: Int?, indexed: Int, message: DeckMessage?, onRescan: () -> Unit) {
+private fun StorageBay(scanning: Int?, indexed: Int, message: DeckMessage?, storage: StorageUsage?, onRescan: () -> Unit) {
     val c = Deck.colors
     val reduced = rememberReducedMotion()
     val isScanning = scanning != null
@@ -395,6 +397,7 @@ private fun StorageBay(scanning: Int?, indexed: Int, message: DeckMessage?, onRe
                     Text(stringResource(R.string.lib_db_ok), style = Deck.type.labelSm, color = c.onSurfaceVariant, maxLines = 1)
                 }
             }
+            storage?.let { StorageBar(it) }
             Box(
                 Modifier.size(0.dp).semantics {
                     liveRegion = LiveRegionMode.Polite

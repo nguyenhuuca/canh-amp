@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,6 +39,7 @@ import com.canhamp.R
 import com.canhamp.data.settings.RepeatSetting
 import com.canhamp.playback.dsp.DspStatus
 import com.canhamp.playback.dsp.SpectrumFrame
+import com.canhamp.playback.NowPlaying
 import com.canhamp.ui.components.DeckModule
 import com.canhamp.ui.components.HFader
 import com.canhamp.ui.components.LedToggle
@@ -44,6 +47,7 @@ import com.canhamp.ui.components.RecessedWell
 import com.canhamp.ui.components.TactileButton
 import com.canhamp.ui.components.VfdText
 import com.canhamp.ui.library.TrackDetailsSheet
+import com.canhamp.ui.theme.CanhAmpTheme
 import com.canhamp.ui.theme.Deck
 import com.canhamp.ui.theme.Dimens
 import com.canhamp.util.formatDuration
@@ -66,33 +70,110 @@ fun MainScreen(
         minActiveState = Lifecycle.State.RESUMED,
     )
 
+    MainScreenContent(
+        state = state,
+        frame = frame,
+        onOpen = onOpen,
+        onOpenEq = onOpenEq,
+        actions = DeckActions(
+            toggleTime = vm::toggleTimeMode,
+            cycleVis = vm::cycleVisMode,
+            seek = vm::seek,
+            setVolume = vm::setVolume,
+            setBalance = vm::setBalance,
+            previous = vm::previous,
+            play = vm::play,
+            pause = vm::pause,
+            stop = vm::stop,
+            next = vm::next,
+            toggleShuffle = vm::toggleShuffle,
+            cycleRepeat = vm::cycleRepeat,
+        ),
+        onShowDetails = { showDetails = true },
+    )
+    if (showDetails && currentTrackId != null) {
+        TrackDetailsSheet(trackId = currentTrackId, onDismiss = { showDetails = false })
+    }
+}
+
+/** Everything the deck can ask of the player, so the content composable needs no view model. */
+private class DeckActions(
+    val toggleTime: () -> Unit = {},
+    val cycleVis: () -> Unit = {},
+    val seek: (Long) -> Unit = {},
+    val setVolume: (Float) -> Unit = {},
+    val setBalance: (Float) -> Unit = {},
+    val previous: () -> Unit = {},
+    val play: () -> Unit = {},
+    val pause: () -> Unit = {},
+    val stop: () -> Unit = {},
+    val next: () -> Unit = {},
+    val toggleShuffle: () -> Unit = {},
+    val cycleRepeat: () -> Unit = {},
+)
+
+/** The deck's modules for one [state]. */
+@Composable
+private fun MainScreenContent(
+    state: MainUiState,
+    frame: SpectrumFrame,
+    onOpen: () -> Unit,
+    onOpenEq: () -> Unit,
+    actions: DeckActions,
+    onShowDetails: () -> Unit,
+) {
     Column(
         Modifier.verticalScroll(rememberScrollState()).padding(vertical = Dimens.spaceMd),
         verticalArrangement = Arrangement.spacedBy(Dimens.spaceLg),
     ) {
         ChassisPlate(state.dsp)
-        DeckDisplay(state, frame, vm::toggleTimeMode, vm::cycleVisMode)
-        SeekModule(state, vm::seek)
+        DeckDisplay(state, frame, actions.toggleTime, actions.cycleVis)
+        SeekModule(state, actions.seek)
         Row(horizontalArrangement = Arrangement.spacedBy(Dimens.spaceLg)) {
-            VolumeModule(state, vm::setVolume, Modifier.weight(1f))
-            BalanceModule(state, vm::setBalance, Modifier.weight(1f))
+            VolumeModule(state, actions.setVolume, Modifier.weight(1f))
+            BalanceModule(state, actions.setBalance, Modifier.weight(1f))
         }
         TransportDeck(
             state,
-            onPrev = vm::previous,
-            onPlay = vm::play,
-            onPause = vm::pause,
-            onStop = vm::stop,
-            onNext = vm::next,
+            onPrev = actions.previous,
+            onPlay = actions.play,
+            onPause = actions.pause,
+            onStop = actions.stop,
+            onNext = actions.next,
             onOpen = onOpen,
         )
-        TogglesRow(state, vm::toggleShuffle, vm::cycleRepeat, { showDetails = true }, onOpenEq, infoEnabled = currentTrackId != null)
+        TogglesRow(state, actions.toggleShuffle, actions.cycleRepeat, onShowDetails, onOpenEq, infoEnabled = state.now.trackId != null)
         NowPlayingCard(state.now)
         FooterPlate()
     }
-    if (showDetails && currentTrackId != null) {
-        TrackDetailsSheet(trackId = currentTrackId, onDismiss = { showDetails = false })
-    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF101417, fontScale = 1.3f, widthDp = 360, heightDp = 1400)
+@Composable
+private fun MainScreenFontScalePreview() = CanhAmpTheme {
+    MainScreenContent(
+        state = MainUiState(
+            now = NowPlaying(
+                trackId = 1L,
+                title = "A Very Long Track Title That Will Not Fit",
+                artist = "An Artist With A Long Name",
+                album = "Long Album Name",
+                durationMs = 245_000,
+                positionMs = 83_000,
+                queueSize = 12,
+                index = 3,
+                bitrateKbps = 320,
+                sampleRateHz = 44_100,
+                channelCount = 2,
+                isPlaying = true,
+            ),
+        ),
+        frame = SpectrumFrame.EMPTY,
+        onOpen = {},
+        onOpenEq = {},
+        actions = DeckActions(),
+        onShowDetails = {},
+    )
 }
 
 @Composable
@@ -139,7 +220,7 @@ private fun SeekModule(state: MainUiState, onSeek: (Long) -> Unit) {
     DeckModule(Modifier.fillMaxWidth()) {
         Column {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(stringResource(R.string.deck_seek), style = Deck.type.labelMd, color = c.onSurface)
+                Text(stringResource(R.string.deck_seek), style = Deck.type.labelMd, color = c.onSurface, maxLines = 1)
                 VfdText(label, style = Deck.type.labelMd)
             }
             HFader(
@@ -211,9 +292,9 @@ private fun ScaleRow(start: String, mid: String, end: String) {
     val style = Deck.type.labelSm
     val color = Deck.colors.onSurfaceVariant
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(start, style = style, color = color)
-        Text(mid, style = style, color = color)
-        Text(end, style = style, color = color)
+        Text(start, style = style, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(mid, style = style, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(end, style = style, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
 

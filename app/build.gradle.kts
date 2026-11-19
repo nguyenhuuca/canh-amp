@@ -125,6 +125,7 @@ dependencies {
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
     implementation(libs.reorderable)
+    implementation(libs.metrics.performance)
 
     // Tests
     testImplementation(libs.junit)

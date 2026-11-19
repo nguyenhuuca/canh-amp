@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -26,6 +29,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.canhamp.R
@@ -40,6 +47,7 @@ fun DeckHeader(
     subtitle: String,
     stereo: Boolean?,
     modifier: Modifier = Modifier,
+    subtitleError: Boolean = false,
 ) {
     val c = Deck.colors
     Box(
@@ -49,7 +57,11 @@ fun DeckHeader(
             .windowInsetsPadding(WindowInsets.statusBars),
     ) {
         Row(
-            Modifier.fillMaxWidth().height(Dimens.headerHeight).padding(horizontal = Dimens.margin),
+            Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
+                .height(Dimens.headerHeight)
+                .padding(horizontal = Dimens.margin),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AppMark(Modifier.size(28.dp))
@@ -60,12 +72,15 @@ fun DeckHeader(
                     style = Deck.type.titleMd.copy(shadow = glowShadow(c.glow)),
                     color = c.primaryContainer,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     subtitle.uppercase(),
                     style = Deck.type.labelSm,
-                    color = c.onSurfaceVariant,
+                    color = if (subtitleError) c.error else c.onSurfaceVariant,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.semantics { if (subtitleError) liveRegion = LiveRegionMode.Polite },
                 )
             }
             StereoPill(stereo)

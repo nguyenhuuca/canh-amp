@@ -23,7 +23,11 @@ import com.canhamp.data.library.ScanGenerationStore
 import com.canhamp.data.library.ScanOutcome
 import com.canhamp.util.likePattern
 import com.canhamp.util.normalizeQuery
+import android.os.Environment
+import android.os.StatFs
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -134,7 +138,27 @@ class LibraryViewModel(
     val counts: StateFlow<TabCounts> = combine(dao.count(), dao.artistCount(), dao.albumCount(), ::TabCounts)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), TabCounts())
 
+    private val device = MutableStateFlow<Pair<Long, Long>?>(null)
+
+    /** Device total/free storage plus the indexed audio size, or null until the volume was read (B12). */
+    val storage: StateFlow<StorageUsage?> = combine(device, dao.observeSumSize()) { dev, audio ->
+        dev?.let { (total, free) -> StorageUsage(total, free, audio) }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
+
+    /** Re-reads the volume size off the main thread; a failure leaves the bar hidden. */
+    fun refreshStorage() {
+        viewModelScope.launch {
+            device.value = withContext(Dispatchers.IO) {
+                runCatching {
+                    val stat = StatFs(Environment.getExternalStorageDirectory().path)
+                    stat.totalBytes to stat.availableBytes
+                }.getOrNull()
+            }
+        }
+    }
+
     init {
+        refreshStorage()
         viewModelScope.launch { _everScanned.value = store.lastScanAtMs() > 0L }
     }
 
@@ -211,7 +235,10 @@ class LibraryViewModel(
 
     private suspend fun runScan() {
         when (repo.scan()) {
-            is ScanOutcome.Success -> _everScanned.value = true
+            is ScanOutcome.Success -> {
+                _everScanned.value = true
+                refreshStorage()
+            }
             is ScanOutcome.Failure -> _events.tryEmit(LibraryEvent.ScanFailed)
         }
     }
