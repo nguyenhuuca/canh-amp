@@ -1,6 +1,6 @@
-## Chưa phát hành
+## 0.2.0 — 2026-11-19
 - Chọn ngôn ngữ trong app (English / Tiếng Việt)
-- Màn hình Cài đặt với các tab Giao diện và Ghi chú phát hành
+- Màn hình Cài đặt với các tab Giao diện, Ghi chú phát hành và Ngôn ngữ
 - Đã bỏ âm lượng và cân bằng trái/phải khỏi màn hình chính (dùng phím âm lượng của điện thoại; cân bằng nằm ở màn hình EQ)
 
 ## 0.1.0 — 2026-11-19

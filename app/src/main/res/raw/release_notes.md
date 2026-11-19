@@ -1,6 +1,6 @@
-## Unreleased
+## 0.2.0 — 2026-11-19
 - In-app language switch (English / Tiếng Việt)
-- Settings screen with Skin and Release notes tabs
+- Settings screen with Skin, Release notes and Language tabs
 - Volume and balance removed from the main deck (use phone volume keys; balance is on the EQ screen)
 
 ## 0.1.0 — 2026-11-19
