@@ -8,7 +8,7 @@ import org.junit.Test
 class DeckDestinationTest {
     @Test fun hasFiveDestinationsInTabOrder() {
         assertEquals(
-            listOf("MAIN", "EQ", "PLAYLIST", "LIBRARY", "SKINS"),
+            listOf("MAIN", "EQ", "PLAYLIST", "LIBRARY", "SETTINGS"),
             DeckDestination.entries.map { it.name },
         )
     }

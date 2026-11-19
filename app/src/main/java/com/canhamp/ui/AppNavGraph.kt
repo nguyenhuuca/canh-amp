@@ -22,7 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
-import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Radio
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -70,7 +70,7 @@ import com.canhamp.ui.library.toQueueEntry
 import kotlinx.coroutines.delay
 import com.canhamp.ui.main.MainScreen
 import com.canhamp.ui.playlist.PlaylistScreen
-import com.canhamp.ui.skins.SkinsScreen
+import com.canhamp.ui.settings.SettingsScreen
 import com.canhamp.ui.theme.Deck
 import com.canhamp.ui.theme.Dimens
 
@@ -84,7 +84,7 @@ enum class DeckDestination(
     EQ("eq", R.string.nav_eq, R.string.subtitle_eq, Icons.Filled.Equalizer),
     PLAYLIST("playlist", R.string.nav_playlist, R.string.subtitle_playlist, Icons.AutoMirrored.Filled.QueueMusic),
     LIBRARY("library", R.string.nav_library, R.string.subtitle_library, Icons.Filled.FolderOpen),
-    SKINS("skins", R.string.nav_skins, R.string.subtitle_skins, Icons.Filled.Palette),
+    SETTINGS("settings", R.string.nav_settings, R.string.subtitle_settings, Icons.Filled.Settings),
     ;
 
     companion object {
@@ -222,7 +222,7 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
                         },
                     )
                 }
-                composable(DeckDestination.SKINS.route) { SkinsScreen() }
+                composable(DeckDestination.SETTINGS.route) { SettingsScreen() }
             }
             MiniPlayerBar(
                 state = mini,

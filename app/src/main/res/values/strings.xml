@@ -8,12 +8,19 @@
     <string name="nav_eq">EQ</string>
     <string name="nav_playlist">PLAYLIST</string>
     <string name="nav_library">LIBRARY</string>
-    <string name="nav_skins">SKINS</string>
+    <string name="nav_settings">SETTINGS</string>
     <string name="subtitle_main">MAIN PLAYER</string>
     <string name="subtitle_eq">GRAPHIC EQUALIZER</string>
     <string name="subtitle_playlist">PLAYLIST QUEUE</string>
     <string name="subtitle_library">MEDIA LIBRARY</string>
-    <string name="subtitle_skins">SKINS BROWSER</string>
+    <string name="subtitle_settings">SETTINGS</string>
+    <string name="settings_tab_skin">SKIN</string>
+    <string name="settings_tab_release_notes">RELEASE NOTES</string>
+    <string name="settings_tab_language">LANGUAGE</string>
+    <string name="settings_lang_system">SYSTEM DEFAULT</string>
+    <string name="settings_lang_english" translatable="false">ENGLISH</string>
+    <string name="settings_lang_vietnamese" translatable="false">TIẾNG VIỆT</string>
+    <string name="settings_version">VERSION %1$s (%2$d)</string>
     <string name="led_stereo">STEREO</string>
     <string name="led_mono">MONO</string>
     <string name="err_engine_offline">ERR: AUDIO ENGINE OFFLINE</string>

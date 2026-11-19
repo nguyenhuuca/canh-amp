@@ -1,7 +1,7 @@
 package com.canhamp
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
@@ -14,7 +14,7 @@ import com.canhamp.ui.theme.ThemeId
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     private var jank: JankMonitor? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
