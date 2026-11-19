@@ -86,7 +86,7 @@ class PlayerConnection(
 
     private suspend fun buildController(): MediaController? {
         val token = SessionToken(context, ComponentName(context, CanhAmpPlaybackService::class.java))
-        val future = MediaController.Builder(context, token).buildAsync()
+        val future = MediaController.Builder(context, token).setListener(disconnectListener).buildAsync()
         return suspendCancellableCoroutine { cont ->
             future.addListener(
                 {
@@ -102,6 +102,22 @@ class PlayerConnection(
             )
             cont.invokeOnCancellation { future.cancel(false) }
         }
+    }
+
+    private val disconnectListener = object : MediaController.Listener {
+        override fun onDisconnected(controller: MediaController) = handleDisconnect(controller)
+    }
+
+    /** The session went away (service killed, session released): drop the dead controller and rebuild with backoff. */
+    private fun handleDisconnect(dead: MediaController) {
+        if (controller !== dead) return
+        logger.w(TAG, "controller disconnected")
+        ticker?.cancel()
+        ticker = null
+        controller = null
+        _connected.value = false
+        dead.release()
+        connect()
     }
 
     private fun attach(c: MediaController) {

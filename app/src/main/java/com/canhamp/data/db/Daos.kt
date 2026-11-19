@@ -40,6 +40,9 @@ interface TrackDao {
         return tracks.size - toUpdate.size
     }
 
+    @Query("SELECT COUNT(*) FROM tracks WHERE source = :source")
+    suspend fun countBySource(source: String): Int
+
     @Query("DELETE FROM tracks WHERE source = :source AND scanGeneration < :generation")
     suspend fun deleteStale(source: String, generation: Long): Int
 

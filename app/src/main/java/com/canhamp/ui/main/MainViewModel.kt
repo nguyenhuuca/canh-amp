@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -43,7 +42,6 @@ class MainViewModel(
     private val dsp: DspEngine,
 ) : ViewModel() {
 
-    private val balance = MutableStateFlow(0f)
     private val readError = MutableStateFlow(false)
     private var errorJob: Job? = null
 
@@ -51,14 +49,13 @@ class MainViewModel(
         player.nowPlaying,
         settings.settings,
         dsp.status,
-        balance,
+        dsp.config.map { it.balance },
         readError,
     ) { now, s, status, bal, err ->
         MainUiState(now, s.timeMode, s.visMode, s.visAnimated, bal, status, err)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), MainUiState())
 
     init {
-        viewModelScope.launch { balance.value = settings.settings.map { it.balance }.first() }
         viewModelScope.launch { player.errors.collect { showError() } }
     }
 
@@ -94,8 +91,7 @@ class MainViewModel(
 
     fun setBalance(raw: Float) {
         val b = DeckFormat.snapBalance(raw)
-        if (b == balance.value) return
-        balance.value = b
+        if (b == dsp.current().balance) return
         dsp.update { it.copy(balance = b) }
         viewModelScope.launch { settings.setBalance(b) }
     }

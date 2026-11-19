@@ -52,6 +52,9 @@ interface TrackStore {
     suspend fun upsert(tracks: List<TrackEntity>): Int
     suspend fun deleteStale(source: TrackSource, generation: Long): Int
     suspend fun count(): Int
+
+    /** Rows of one source; the scan uses it to tell an empty MediaStore answer from a real empty library. */
+    suspend fun countBySource(source: TrackSource): Int = 0
 }
 
 class TrackDaoStore(private val dao: TrackDao) : TrackStore {
@@ -60,6 +63,7 @@ class TrackDaoStore(private val dao: TrackDao) : TrackStore {
         dao.deleteStale(source.name, generation)
 
     override suspend fun count(): Int = dao.count().first()
+    override suspend fun countBySource(source: TrackSource): Int = dao.countBySource(source.name)
 }
 
 class TrackDaoLookup(private val dao: TrackDao) : TrackLookup {
@@ -257,6 +261,14 @@ class LibraryRepository(
                 added += tracks.upsert(entities)
                 seen += entities.size
                 _scanning.value = seen
+            }
+            // An empty answer over a non-empty library is more likely a provider glitch than a wiped device.
+            val existing = if (seen == 0) tracks.countBySource(TrackSource.MEDIASTORE) else 0
+            if (seen == 0 && existing > 0) {
+                logger.w(TAG, "scan saw 0 rows, keeping existing=$existing")
+                val end = clock()
+                store.setLastScanAtMs(end)
+                return ScanOutcome.Success(ScanResult(0, 0, 0, tracks.count(), end - startedAt))
             }
             val removed = tracks.deleteStale(TrackSource.MEDIASTORE, newGen)
             store.setScanGeneration(newGen)

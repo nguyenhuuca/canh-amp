@@ -10,6 +10,8 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
 import com.canhamp.CanhAmpApp
 import com.canhamp.MainActivity
 import com.canhamp.data.queue.QueueRepository
@@ -38,6 +40,9 @@ class CanhAmpPlaybackService : MediaSessionService() {
     private var queueRepo: QueueRepository? = null
     private var positionJob: Job? = null
 
+    /** Set when onTaskRemoved ended the service with a save, so onDestroy does not block the main thread again. */
+    private var savedOnTaskRemoved = false
+
     /** Mirroring stays off until the saved queue is loaded, so an empty start cannot wipe it (B57). */
     private var restored = false
 
@@ -57,13 +62,45 @@ class CanhAmpPlaybackService : MediaSessionService() {
             Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
-        session = MediaSession.Builder(this, exo).setSessionActivity(openApp).build()
+        session = MediaSession.Builder(this, exo)
+            .setSessionActivity(openApp)
+            .setCallback(SessionCallback())
+            .build()
 
         scope.launch {
             val settings = container.settingsRepository.settings.first()
             applySettings(exo, settings)
             container.dspEngine.update { applyDsp(settings) }
             restoreQueue(exo, queue)
+        }
+    }
+
+    /** The session is exported, so other apps can reach it: keep them out and keep remote uris out of the queue. */
+    private inner class SessionCallback : MediaSession.Callback {
+        override fun onConnect(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+        ): MediaSession.ConnectionResult =
+            if (SessionPolicy.isAllowedController(controller.isTrusted, controller.packageName, packageName)) {
+                MediaSession.ConnectionResult.AcceptedResultBuilder(session).build()
+            } else {
+                MediaSession.ConnectionResult.reject()
+            }
+
+        override fun onAddMediaItems(
+            mediaSession: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            mediaItems: MutableList<MediaItem>,
+        ): ListenableFuture<MutableList<MediaItem>> {
+            val kept = mediaItems.mapNotNull { item ->
+                val uri = item.localConfiguration?.uri ?: item.requestMetadata.mediaUri
+                when {
+                    uri == null || !SessionPolicy.isAllowedMediaUri(uri.toString()) -> null
+                    item.localConfiguration == null -> item.buildUpon().setUri(uri).build()
+                    else -> item
+                }
+            }.toMutableList()
+            return Futures.immediateFuture(kept)
         }
     }
 
@@ -80,11 +117,14 @@ class CanhAmpPlaybackService : MediaSessionService() {
                     exo.prepare()
                 }
             }
-            restored = true
         } catch (e: kotlinx.coroutines.CancellationException) {
             throw e
         } catch (e: Exception) {
             (application as CanhAmpApp).container.logger.w(TAG, "queue restore failed: ${e.javaClass.simpleName}")
+        } finally {
+            // A failed restore must not leave mirroring off for good; mirror what is loaded, restored or not.
+            restored = true
+            if (exo.mediaItemCount > 0) queue.mirror(currentEntries(exo))
         }
     }
 
@@ -132,12 +172,13 @@ class CanhAmpPlaybackService : MediaSessionService() {
         saveBlocking()
         val p = player
         if (p == null || !p.playWhenReady || p.mediaItemCount == 0 || p.playbackState == Player.STATE_ENDED) {
+            savedOnTaskRemoved = true
             stopSelf()
         }
     }
 
     override fun onDestroy() {
-        saveBlocking()
+        if (!savedOnTaskRemoved) saveBlocking()
         scope.cancel()
         session?.release()
         session = null

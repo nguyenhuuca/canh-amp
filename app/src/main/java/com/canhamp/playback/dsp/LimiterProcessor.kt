@@ -16,7 +16,8 @@ import kotlin.math.max
  *
  * There is no lookahead, so the envelope alone can overshoot during the attack; the output is also
  * hard-clamped to the ceiling. While the envelope stays under the ceiling the gain is exactly 1 and
- * the output equals the input bit for bit.
+ * samples whose magnitude is at most the ceiling (32392 in 16-bit) pass bit for bit; louder samples are
+ * clamped to it, which keeps the "no sample above the ceiling" guarantee.
  */
 @UnstableApi
 class LimiterProcessor : BaseAudioProcessor() {

@@ -54,6 +54,7 @@ class LibraryRepositoryTest {
         }
 
         override suspend fun count(): Int = uris.size
+        override suspend fun countBySource(source: TrackSource): Int = uris.size
     }
 
     private class FakeGen(var gen: Long = 0, var last: Long = 0) : ScanGenerationStore {
@@ -83,6 +84,25 @@ class LibraryRepositoryTest {
         assertEquals(1, r.updated)
         assertEquals(3, r.removed)
         assertEquals(3, r.total)
+        assertEquals(5L, store.staleGen)
+        assertEquals(5L, gen.gen)
+    }
+
+    @Test fun emptyScanOverExistingRowsKeepsThemAndTheGeneration() = runTest {
+        val store = FakeStore().apply { staleRemoved = 9; uris.add("content://x/1") }
+        val gen = FakeGen(gen = 4)
+        val out = repo(FakeSource(emptyList()), store, gen).scan()
+        val r = (out as ScanOutcome.Success).result
+        assertEquals(0, r.removed)
+        assertEquals(1, r.total)
+        assertEquals(null, store.staleGen)
+        assertEquals(4L, gen.gen)
+    }
+
+    @Test fun emptyScanOverAnEmptyStoreStillAdvances() = runTest {
+        val gen = FakeGen(gen = 4)
+        val store = FakeStore()
+        repo(FakeSource(emptyList()), store, gen).scan()
         assertEquals(5L, store.staleGen)
         assertEquals(5L, gen.gen)
     }

@@ -2,6 +2,10 @@ package com.canhamp.data.playlist
 
 import com.canhamp.data.db.TrackEntity
 import com.canhamp.playback.QueueEntry
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.cancellation.CancellationException
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -41,8 +45,9 @@ sealed interface LoadResult {
 class PlaylistFileRepository(
     private val index: PlaylistTrackIndex,
     private val streams: PlaylistStreams,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
-    suspend fun save(uri: String, items: List<QueueEntry>): SaveResult {
+    suspend fun save(uri: String, items: List<QueueEntry>): SaveResult = withContext(ioDispatcher) {
         val known = index.findByUris(items.map { it.uri }.distinct()).associateBy { it.uri }
         val encoded = M3uCodec.encode(
             items.map { item ->
@@ -54,29 +59,35 @@ class PlaylistFileRepository(
                 )
             },
         )
-        return try {
-            val out = streams.openOutput(uri) ?: return SaveResult.Failed
+        try {
+            val out = streams.openOutput(uri) ?: return@withContext SaveResult.Failed
             out.use { it.write(encoded.toByteArray(Charsets.UTF_8)) }
             SaveResult.Ok(items.size)
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: IOException) {
             SaveResult.Failed
-        } catch (_: SecurityException) {
+        } catch (_: RuntimeException) {
+            // Providers also throw IllegalStateException, IllegalArgumentException and SecurityException.
             SaveResult.Failed
         }
     }
 
     /** [documentId] is the picker's document id, used only to find the folder that relative paths start from. */
-    suspend fun load(uri: String, documentId: String?): LoadResult {
+    suspend fun load(uri: String, documentId: String?): LoadResult = withContext(ioDispatcher) {
         val bytes = try {
-            val input = streams.openInput(uri) ?: return LoadResult.Error(LoadResult.Reason.NotAPlaylist)
+            val input = streams.openInput(uri)
+                ?: return@withContext LoadResult.Error(LoadResult.Reason.NotAPlaylist)
             input.use { readCapped(it, M3uCodec.MAX_BYTES + 1) }
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: IOException) {
-            return LoadResult.Error(LoadResult.Reason.NotAPlaylist)
-        } catch (_: SecurityException) {
-            return LoadResult.Error(LoadResult.Reason.NotAPlaylist)
+            return@withContext LoadResult.Error(LoadResult.Reason.NotAPlaylist)
+        } catch (_: RuntimeException) {
+            return@withContext LoadResult.Error(LoadResult.Reason.NotAPlaylist)
         }
         val decoded = when (val r = M3uCodec.decode(bytes)) {
-            is DecodeResult.Error -> return LoadResult.Error(
+            is DecodeResult.Error -> return@withContext LoadResult.Error(
                 if (r.reason == DecodeResult.Reason.TooLarge) LoadResult.Reason.TooLarge else LoadResult.Reason.NotAPlaylist,
             )
             is DecodeResult.Ok -> r.entries
@@ -99,7 +110,7 @@ class PlaylistFileRepository(
             }
             if (track == null) missing++ else entries += track.toQueueEntry()
         }
-        return LoadResult.Ok(entries, missing)
+        LoadResult.Ok(entries, missing)
     }
 
     private fun readCapped(input: InputStream, limit: Int): ByteArray {

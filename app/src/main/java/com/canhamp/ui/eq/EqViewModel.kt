@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class EqUiState(
@@ -92,7 +93,10 @@ class EqViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), EqUiState())
 
     init {
-        viewModelScope.launch { presetName.value = settings.settings.first().eqPresetName }
+        viewModelScope.launch {
+            val saved = settings.settings.first().eqPresetName
+            presetName.update { it ?: saved }
+        }
         // B52: persist 300 ms after the last change.
         viewModelScope.launch { dirty.debounce(PERSIST_DEBOUNCE_MS).collect { persist() } }
     }
@@ -135,7 +139,8 @@ class EqViewModel(
 
     /** Applies [change] to the engine at once (B43) and schedules the debounced write. */
     private fun edit(change: (EqModel) -> EqModel) {
-        val name = presetName.value ?: return
+        // Before the saved name loads, an edit counts as custom rather than being dropped.
+        val name = presetName.value ?: ""
         var next: EqModel? = null
         dsp.update { config ->
             change(EqModel(config, name)).also { next = it }.config

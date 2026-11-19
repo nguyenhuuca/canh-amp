@@ -16,9 +16,13 @@ fun QueueEntry.toMediaItem(): MediaItem {
         putInt(EXTRA_BITRATE_KBPS, bitrateKbps ?: 0)
         putLong(EXTRA_DURATION_MS, durationMs)
     }
+    val parsed = Uri.parse(uri)
     return MediaItem.Builder()
         .setMediaId(trackId.toString())
-        .setUri(Uri.parse(uri))
+        .setUri(parsed)
+        // Survives the controller-to-session hop even if localConfiguration is stripped;
+        // CanhAmpPlaybackService.onAddMediaItems rebuilds the playable uri from it.
+        .setRequestMetadata(MediaItem.RequestMetadata.Builder().setMediaUri(parsed).build())
         .setMediaMetadata(
             MediaMetadata.Builder()
                 .setTitle(title)

@@ -173,6 +173,37 @@ class PlaylistFileRepositoryTest {
         assertEquals(SaveResult.Failed, result)
     }
 
+    private class CountingDispatcher : kotlinx.coroutines.CoroutineDispatcher() {
+        var dispatched = 0
+        override fun dispatch(context: kotlin.coroutines.CoroutineContext, block: Runnable) {
+            dispatched++
+            block.run()
+        }
+    }
+
+    private class ThrowingStreams : PlaylistStreams {
+        override fun openInput(uri: String): InputStream? = throw IllegalStateException("provider died")
+        override fun openOutput(uri: String): OutputStream? = throw IllegalArgumentException("bad uri")
+    }
+
+    @Test
+    fun providerRuntimeExceptionsBecomeFailureResults() = runTest {
+        val repo = PlaylistFileRepository(FakeIndex(library), ThrowingStreams())
+        assertEquals(SaveResult.Failed, repo.save("content://x", listOf(queueEntry(library[0]))))
+        assertEquals(LoadResult.Error(LoadResult.Reason.NotAPlaylist), repo.load("content://x", null))
+    }
+
+    @Test
+    fun saveAndLoadRunOnTheInjectedDispatcher() = runTest {
+        val d = CountingDispatcher()
+        val streams = FakeStreams()
+        val repo = PlaylistFileRepository(FakeIndex(library), streams, d)
+        repo.save("content://x", listOf(queueEntry(library[0])))
+        assertEquals(1, d.dispatched)
+        repo.load("content://x", null)
+        assertEquals(2, d.dispatched)
+    }
+
     @Test
     fun baseDirFromDocumentId() {
         val f = PlaylistFileRepository.Companion::baseDirFromDocumentId
