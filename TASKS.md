@@ -33,4 +33,4 @@
 - [x] T20 Spectrum analyser and SpectrumView 57e867f
 - [x] T21 Skins screen and theme apply 9b8dfc3
 - [x] T22 Accessibility, storage bar and polish 84c15e1
-- [~] T23 v0.1.0 release (owner device check + release.yml)
+- [x] T23 v0.1.0 release (owner device check + release.yml) v0.1.0

@@ -1,9 +1,7 @@
 task: Canh Amp - retro MP3 player Android app
-status: blocked
-progress: 95
-done: T1-T22 all done; M2-M6 review fixes 109cc31; 330+ unit tests green
-doing: T23 v0.1.0 release
-next: owner runs docs/reports/device-check-2026-11-19.md on CI APK; then dispatch release.yml 0.1.0
-blocker: owner device test (checklist) + release keystore secrets before release.yml
+status: done
+progress: 100
+done: T1-T23; device check passed; v0.1.0 released
+next: smoke-test the minified release APK on device; collect feedback for v0.2
 plan: docs/plans/plan-retro-player.md
-updated: 2026-11-19 07:11
+updated: 2026-11-19 19:40
