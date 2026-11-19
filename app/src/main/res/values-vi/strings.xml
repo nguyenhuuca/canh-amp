@@ -84,7 +84,7 @@
     <string name="deck_channels">KÊNH</string>
     <string name="deck_off">TẮT</string>
     <string name="deck_transport">BỘ ĐIỀU KHIỂN // PHÍM CƠ CHÍNH XÁC</string>
-    <string name="deck_motor">ĐỘNG CƠ ĐANG CHẠY</string>
+    <string name="deck_motor">ĐANG QUAY</string>
     <string name="btn_prev">TRƯỚC</string>
     <string name="btn_play">PHÁT</string>
     <string name="btn_pause">DỪNG</string>
