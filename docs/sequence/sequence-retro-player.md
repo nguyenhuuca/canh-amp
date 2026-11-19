@@ -29,7 +29,7 @@ sequenceDiagram
     LVM->>LVM: build items = visible list window (≤500), start = i
     LVM->>PC: setQueue(items, start) + play()
     PC->>SVC: MediaSession setMediaItems / play
-    SVC->>EXO: setMediaItems(items, start, 0) ; prepare() ; play()
+    SVC->>EXO: setMediaItems(items, start, 0), then prepare(), then play()
     EXO->>EXO: request audio focus (USAGE_MEDIA)
     EXO->>DSP: 16-bit PCM buffers
     DSP-->>EXO: processed PCM (limited ≤ -0.1 dBFS)
@@ -67,7 +67,7 @@ sequenceDiagram
     QR->>DB: SELECT * FROM queue_items ORDER BY position
     DB-->>QR: rows
     QR-->>SVC: QueueSnapshot(items)
-    SVC->>EXO: setMediaItems(items, queueIndex, queuePositionMs) ; prepare()
+    SVC->>EXO: setMediaItems(items, queueIndex, queuePositionMs), then prepare()
     SVC->>EXO: shuffleModeEnabled, repeatMode, volume
     Note over EXO: stays paused (playWhenReady=false)
     SVC-->>PC: session connected
@@ -99,11 +99,11 @@ sequenceDiagram
     LS->>OS: requestPermission
     alt denied
         OS-->>LS: denied
-        LS-->>U: rationale stays; if permanently denied → button opens app settings
+        LS-->>U: rationale stays, if permanently denied → button opens app settings
     else granted
         OS-->>LS: granted
         LS->>LVM: onPermissionGranted
-        LVM->>LR: scan() (Mutex; joins a running scan)
+        LVM->>LR: scan() (Mutex, joins a running scan)
         LR->>SET: read scanGeneration g
         LR->>MSS: query(projection, music & not ringtone/alarm, ≥10 s)
         MSS->>MSP: ContentResolver.query(Audio.Media)
@@ -140,8 +140,8 @@ sequenceDiagram
 
     U->>EQ: drag 1K fader to +3
     EQ->>EVM: setBand(4, +3)
-    EVM->>DE: update { gains[4]=3, presetName="" }
-    DE->>DE: AtomicReference.set(DspConfig v+1); autoPreamp from analytic peak
+    EVM->>DE: update(gains[4] = 3, presetName = empty)
+    DE->>DE: AtomicReference.set(DspConfig v+1), autoPreamp from analytic peak
     EVM-->>EQ: curve points (64), label [CUSTOM], GAIN x.x dB
     EVM->>SET: persist eqGains, eqPresetName (debounced 300 ms)
     Note over EP: next buffer (≤ 20 ms)
@@ -224,7 +224,7 @@ sequenceDiagram
     EXO->>EXO: pause (playWhenReady=false)
     EXO-->>SVC: onIsPlayingChanged(false)
     SVC->>QR: savePosition
-    Note over SVC: notification stays; service may leave foreground after Media3 timeout
+    Note over SVC: notification stays, service may leave foreground after Media3 timeout
 ```
 
 ## 7. Import a folder through SAF (failure: empty folder)
@@ -261,7 +261,7 @@ sequenceDiagram
             LVM-->>LS: "NO AUDIO IN FOLDER"
         else n files
             SFS-->>LR: documents
-            LR->>DB: INSERT saf_folders ; INSERT tracks (name-derived metadata)
+            LR->>DB: INSERT saf_folders, then INSERT tracks (name-derived metadata)
             LR-->>LVM: ImportResult(n)
             LVM-->>LS: list shows n new tracks
             par background, 4 in parallel
