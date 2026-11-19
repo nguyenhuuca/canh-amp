@@ -67,7 +67,6 @@
     <string name="deck_audio_on">ĐANG PHÁT</string>
     <string name="deck_buffering">ĐANG TẢI</string>
     <string name="deck_seek">VỊ TRÍ BÀI</string>
-    <string name="deck_volume">ÂM LƯỢNG</string>
     <string name="deck_balance">CÂN BẰNG</string>
     <string name="deck_center">GIỮA</string>
     <string name="deck_spectrum">PHỔ ÂM RTA</string>
@@ -79,12 +78,6 @@
     <string name="deck_sampling">LẤY MẪU</string>
     <string name="deck_channels">KÊNH</string>
     <string name="deck_off">TẮT</string>
-    <string name="deck_min">MIN</string>
-    <string name="deck_mid">GIỮA</string>
-    <string name="deck_max">MAX</string>
-    <string name="deck_left">T</string>
-    <string name="deck_centre_short">G</string>
-    <string name="deck_right">P</string>
     <string name="deck_transport">BỘ ĐIỀU KHIỂN // PHÍM CƠ CHÍNH XÁC</string>
     <string name="deck_motor">ĐỘNG CƠ ĐANG CHẠY</string>
     <string name="btn_prev">TRƯỚC</string>
@@ -103,7 +96,6 @@
     <string name="marquee_idle">*** CANH AMP *** CHỌN BÀI TỪ THƯ VIỆN ***</string>
     <string name="deck_cd_timer">Đổi giữa thời gian đã phát và còn lại</string>
     <string name="deck_cd_mode">Đổi chế độ hiển thị phổ</string>
-    <string name="deck_cd_volume">Âm lượng</string>
     <string name="deck_cd_balance">Cân bằng</string>
     <string name="deck_cd_seek">Vị trí bài</string>
     <string name="deck_cd_info">Chi tiết bài hát</string>

@@ -82,18 +82,6 @@ class DeckFormatTest {
         assertEquals("R 100", DeckFormat.balanceLabel(1f, "CENTER"))
     }
 
-    @Test fun volumeLabel() {
-        assertEquals("82%", DeckFormat.volumeLabel(0.82f))
-        assertEquals("0%", DeckFormat.volumeLabel(-1f))
-        assertEquals("100%", DeckFormat.volumeLabel(2f))
-    }
-
-    @Test fun volumeStepsOfOnePercent() {
-        assertEquals(0.82f, DeckFormat.stepVolume(0.8213f), 1e-6f)
-        assertEquals(0f, DeckFormat.stepVolume(Float.NaN), 0f)
-        assertEquals(1f, DeckFormat.stepVolume(7f), 0f)
-    }
-
     @Test fun balanceSnapsToCentreBelowOneStep() {
         assertEquals(0f, DeckFormat.snapBalance(0.049f), 0f)
         assertEquals(0f, DeckFormat.snapBalance(-0.049f), 0f)

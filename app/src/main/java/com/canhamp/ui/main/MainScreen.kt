@@ -79,8 +79,6 @@ fun MainScreen(
             toggleTime = vm::toggleTimeMode,
             cycleVis = vm::cycleVisMode,
             seek = vm::seek,
-            setVolume = vm::setVolume,
-            setBalance = vm::setBalance,
             previous = vm::previous,
             play = vm::play,
             pause = vm::pause,
@@ -101,8 +99,6 @@ private class DeckActions(
     val toggleTime: () -> Unit = {},
     val cycleVis: () -> Unit = {},
     val seek: (Long) -> Unit = {},
-    val setVolume: (Float) -> Unit = {},
-    val setBalance: (Float) -> Unit = {},
     val previous: () -> Unit = {},
     val play: () -> Unit = {},
     val pause: () -> Unit = {},
@@ -129,10 +125,6 @@ private fun MainScreenContent(
         ChassisPlate(state.dsp)
         DeckDisplay(state, frame, actions.toggleTime, actions.cycleVis)
         SeekModule(state, actions.seek)
-        Row(horizontalArrangement = Arrangement.spacedBy(Dimens.spaceLg)) {
-            VolumeModule(state, actions.setVolume, Modifier.weight(1f))
-            BalanceModule(state, actions.setBalance, Modifier.weight(1f))
-        }
         TransportDeck(
             state,
             onPrev = actions.previous,
@@ -243,60 +235,6 @@ private fun SeekModule(state: MainUiState, onSeek: (Long) -> Unit) {
     }
 }
 
-@Composable
-private fun VolumeModule(state: MainUiState, onVolume: (Float) -> Unit, modifier: Modifier) {
-    val c = Deck.colors
-    val volume = DeckFormat.volumeLabel(state.now.volume)
-    DeckModule(modifier) {
-        Column {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(stringResource(R.string.deck_volume), style = Deck.type.labelMd, color = c.onSurface, maxLines = 1)
-                VfdText(volume, style = Deck.type.labelMd)
-            }
-            HFader(
-                value = state.now.volume,
-                onValueChange = onVolume,
-                contentDescription = stringResource(R.string.deck_cd_volume),
-                stateDescription = volume,
-            )
-            ScaleRow(stringResource(R.string.deck_min), stringResource(R.string.deck_mid), stringResource(R.string.deck_max))
-        }
-    }
-}
-
-@Composable
-private fun BalanceModule(state: MainUiState, onBalance: (Float) -> Unit, modifier: Modifier) {
-    val c = Deck.colors
-    val label = DeckFormat.balanceLabel(state.balance, stringResource(R.string.deck_center))
-    DeckModule(modifier) {
-        Column {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(stringResource(R.string.deck_balance), style = Deck.type.labelMd, color = c.onSurface, maxLines = 1)
-                Text(label, style = Deck.type.labelMd, color = c.secondaryContainer, maxLines = 1)
-            }
-            HFader(
-                value = DeckFormat.faderFromBalance(state.balance),
-                onValueChange = { onBalance(DeckFormat.balanceFromFader(it)) },
-                contentDescription = stringResource(R.string.deck_cd_balance),
-                filled = false,
-                detent = true,
-                stateDescription = label,
-            )
-            ScaleRow(stringResource(R.string.deck_left), stringResource(R.string.deck_centre_short), stringResource(R.string.deck_right))
-        }
-    }
-}
-
-@Composable
-private fun ScaleRow(start: String, mid: String, end: String) {
-    val style = Deck.type.labelSm
-    val color = Deck.colors.onSurfaceVariant
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(start, style = style, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(mid, style = style, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(end, style = style, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
-    }
-}
 
 @Composable
 private fun TogglesRow(

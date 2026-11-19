@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -28,7 +27,6 @@ data class MainUiState(
     val timeMode: TimeMode = TimeMode.ELAPSED,
     val visMode: VisMode = VisMode.BAR,
     val visAnimated: Boolean = true,
-    val balance: Float = 0f,
     val dsp: DspStatus = DspStatus.ACTIVE,
     /** True for 3 s after a playback failure (B27). */
     val readError: Boolean = false,
@@ -49,10 +47,9 @@ class MainViewModel(
         player.nowPlaying,
         settings.settings,
         dsp.status,
-        dsp.config.map { it.balance },
         readError,
-    ) { now, s, status, bal, err ->
-        MainUiState(now, s.timeMode, s.visMode, s.visAnimated, bal, status, err)
+    ) { now, s, status, err ->
+        MainUiState(now, s.timeMode, s.visMode, s.visAnimated, status, err)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), MainUiState())
 
     init {
@@ -86,15 +83,6 @@ class MainViewModel(
     fun seek(positionMs: Long) = player.seekTo(positionMs)
     fun toggleShuffle() = player.setShuffle(!state.value.now.shuffle)
     fun cycleRepeat() = player.cycleRepeat()
-
-    fun setVolume(raw: Float) = player.setVolume(DeckFormat.stepVolume(raw))
-
-    fun setBalance(raw: Float) {
-        val b = DeckFormat.snapBalance(raw)
-        if (b == dsp.current().balance) return
-        dsp.update { it.copy(balance = b) }
-        viewModelScope.launch { settings.setBalance(b) }
-    }
 
     companion object {
         const val ERROR_MS = 3_000L

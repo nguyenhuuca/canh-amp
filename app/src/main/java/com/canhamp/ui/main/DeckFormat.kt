@@ -78,13 +78,6 @@ object DeckFormat {
         }
     }
 
-    /** "82%". */
-    fun volumeLabel(volume: Float): String = "${(volume.coerceIn(0f, 1f) * PERCENT).roundToInt()}%"
-
-    /** B29: 1% steps over 0..1; NaN falls back to 0. */
-    fun stepVolume(raw: Float): Float =
-        if (raw.isNaN()) 0f else (raw.coerceIn(0f, 1f) * PERCENT).roundToInt() / PERCENT
-
     /** B30: steps of 0.05 over -1..1, with a snap to 0 when |b| < 0.05. */
     fun snapBalance(raw: Float): Float {
         if (raw.isNaN()) return 0f

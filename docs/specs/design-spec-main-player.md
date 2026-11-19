@@ -17,7 +17,7 @@ See what is playing and control it like a hardware deck. Most important action: 
    - Marquee strip.
    - Four badges: BITRATE, SAMPLING, CHANNELS STEREO (lit), MONO (dim unless mono).
 3. **Song position seek:** a label with `elapsed / duration`, then an `HFader` with a ribbed thumb.
-4. **Volume | Balance:** two `HFader`s side by side with MIN–MID–MAX and L–C–R scales; balance has the amber centre detent.
+4. ~~**Volume | Balance**~~ removed on owner request (2026-11-19) to shorten the screen. Volume uses the phone's volume keys; balance stays on the EQ screen.
 5. **Transport deck:** 6 `TactileButton`s in a row (PREV, PLAY, PAUSE, STOP, NEXT, OPEN). The active PLAY is recessed with a glow. A `MOTOR RUNNING` LED shows while playing.
 6. **Toggles:** SHUFFLE and REPEAT (`OFF` / `ALL` / `ONE`, label `REPEAT`, `REPEAT ALL`, `REPEAT 1`) `LedToggle`s, plus a quick button that opens EQ. The mockup's A-B LOOP and ID3 TAG buttons are out of scope: ID3 TAG becomes `INFO` (track details sheet, read-only); A-B LOOP is omitted.
 7. **Now-playing card:** 64 dp artwork or the cassette placeholder; a format badge (for example `MPEG-1 LAYER 3`, `FLAC`), title (`title-md`) and artist • album (`body-md`).
