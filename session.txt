@@ -1,7 +1,7 @@
 task: Canh Amp - retro MP3 player Android app
 status: done
 progress: 100
-done: T1-T23; device check passed; v0.1.0 released
-next: smoke-test the minified release APK on device; collect feedback for v0.2
+done: v0.1.0 released; v0.2.0 released (Settings: skin, release notes, language); owner verified release on device
+next: collect feedback for next version
 plan: docs/plans/plan-retro-player.md
-updated: 2026-11-19 19:40
+updated: 2026-11-19 20:36
