@@ -1,3 +1,6 @@
+## 0.3.2 — 2026-11-20
+- Fix: with the animated visualizer off, the spectrum now stays still (the peak dots kept moving) and the analyser stops
+
 ## 0.3.1 — 2026-11-20
 - Pure Minimal: the mini player bar is hidden on MAIN
 

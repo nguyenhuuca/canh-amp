@@ -1,3 +1,6 @@
+## 0.3.2 — 2026-11-20
+- Sửa lỗi: khi tắt visualizer chuyển động, phổ đứng yên hoàn toàn (trước đây chấm đỉnh vẫn nhảy) và bộ phân tích ngừng chạy
+
 ## 0.3.1 — 2026-11-20
 - Chế độ Tối giản: ẩn thanh mini player ở màn hình chính
 
