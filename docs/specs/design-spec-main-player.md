@@ -68,7 +68,7 @@ Source: Stitch screen "Canhamp Pure Minimal Player" (be1ebb9f514c4408829cd48baeb
 - **Layout, top to bottom:**
   1. A vinyl record, at most 290 dp wide. It turns once every 18 s while playing and stops in place on pause. It does not turn when visualizer animation is off. The centre label shows the cover art, or the artist with a `SIDE A • 33 RPM` mark.
   2. A `TRK nn` chip with the format badge, the title (up to 2 lines) and `artist • album`.
-  3. A slim seek bar. Tap or drag to seek, with one seek on release (B28). Below it: elapsed, then `FORMAT • kHz`, then the duration.
+  3. One line: elapsed, then `FORMAT • kHz`, then the duration. There is no seek bar (removed 2026-11-20, owner request). Seeking stays on PRO DECK.
   4. Three round keys: previous, a large play/pause, next.
 - **Not shown:** the design's header (network, logo, avatar) and its 4-tab nav. The app keeps its own shell. The "HI-RES" badge is dropped because the DSP chain plays 16-bit (ADR-0001).
 - **Power:** the spectrum analyser is not collected in this mode.

@@ -8,8 +8,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,11 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -52,17 +47,12 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.setProgress
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -94,7 +84,7 @@ internal fun MinimalPlayer(state: MainUiState, actions: DeckActions, modifier: M
     ) {
         Vinyl(now, spinning = now.isPlaying && state.visAnimated, Modifier.widthIn(max = VinylMax).fillMaxWidth())
         TrackInfo(state)
-        MinimalSeek(state, actions.seek)
+        MinimalTimes(state)
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterHorizontally),
@@ -287,98 +277,29 @@ private fun TrackInfo(state: MainUiState) {
     }
 }
 
-/** Slim progress bar: tap or drag to seek, one seek on release (B28). */
+/** Elapsed time, format and duration on one line. */
 @Composable
-private fun MinimalSeek(state: MainUiState, onSeek: (Long) -> Unit) {
+private fun MinimalTimes(state: MainUiState) {
     val c = Deck.colors
     val now = state.now
-    val duration = now.durationMs
-    val enabled = state.hasQueue && duration > 0
-    var drag by remember { mutableStateOf<Float?>(null) }
-    val seek by rememberUpdatedState(onSeek)
-    val dur by rememberUpdatedState(duration)
-    val fraction = drag ?: if (duration > 0) (now.positionMs.toFloat() / duration).coerceIn(0f, 1f) else 0f
-    val shownMs = drag?.let { (it * duration).toLong() } ?: now.positionMs
-    val elapsed = if (state.hasQueue) formatDuration(shownMs) else DeckFormat.NO_VALUE
-    val total = if (state.hasQueue) formatDuration(duration) else DeckFormat.NO_VALUE
-    val seekLabel = stringResource(R.string.deck_cd_seek)
+    val elapsed = if (state.hasQueue) formatDuration(now.positionMs) else DeckFormat.NO_VALUE
+    val total = if (state.hasQueue) formatDuration(now.durationMs) else DeckFormat.NO_VALUE
     val khz = stringResource(R.string.deck_khz)
-
-    Column(Modifier.fillMaxWidth().padding(horizontal = Dimens.spaceMd)) {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(Dimens.minTouch)
-                .semantics {
-                    contentDescription = seekLabel
-                    stateDescription = "$elapsed / $total"
-                    progressBarRangeInfo = ProgressBarRangeInfo(fraction, 0f..1f)
-                    if (enabled) {
-                        setProgress { v ->
-                            seek((v.coerceIn(0f, 1f) * dur).toLong())
-                            true
-                        }
-                    }
-                }
-                .then(
-                    if (!enabled) {
-                        Modifier
-                    } else {
-                        Modifier
-                            .pointerInput(Unit) {
-                                detectTapGestures { o -> seek(((o.x / size.width).coerceIn(0f, 1f) * dur).toLong()) }
-                            }
-                            .pointerInput(Unit) {
-                                var last = 0f
-                                detectHorizontalDragGestures(
-                                    onDragStart = { o -> last = (o.x / size.width).coerceIn(0f, 1f); drag = last },
-                                    onDragEnd = {
-                                        drag = null
-                                        seek((last * dur).toLong())
-                                    },
-                                    onDragCancel = { drag = null },
-                                ) { change, _ ->
-                                    last = (change.position.x / size.width).coerceIn(0f, 1f)
-                                    drag = last
-                                }
-                            }
-                    },
-                ),
-            contentAlignment = Alignment.Center,
-        ) {
-            val glow = c.primaryContainer
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(6.dp)
-                    .clip(CircleShape)
-                    .background(c.surfaceContainerHighest.copy(alpha = 0.6f)),
-            ) {
-                Box(
-                    Modifier
-                        .fillMaxWidth(fraction)
-                        .height(6.dp)
-                        .clip(CircleShape)
-                        .background(glow),
-                )
-            }
-        }
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(elapsed, style = Deck.type.labelMd, color = c.primaryContainer, maxLines = 1)
-            Text(
-                listOfNotNull(
-                    DeckFormat.formatBadge(now.mimeType),
-                    now.sampleRateHz?.let { "${DeckFormat.kHz(it)} $khz" },
-                ).joinToString(" • "),
-                style = Deck.type.labelSm,
-                color = c.onSurfaceVariant.copy(alpha = 0.6f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f).padding(horizontal = Dimens.spaceMd),
-            )
-            Text(total, style = Deck.type.labelMd, color = c.onSurfaceVariant, maxLines = 1)
-        }
+    Row(Modifier.fillMaxWidth().padding(horizontal = Dimens.spaceMd), verticalAlignment = Alignment.CenterVertically) {
+        Text(elapsed, style = Deck.type.labelMd, color = c.primaryContainer, maxLines = 1)
+        Text(
+            listOfNotNull(
+                DeckFormat.formatBadge(now.mimeType),
+                now.sampleRateHz?.let { "${DeckFormat.kHz(it)} $khz" },
+            ).joinToString(" • "),
+            style = Deck.type.labelSm,
+            color = c.onSurfaceVariant.copy(alpha = 0.6f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.weight(1f).padding(horizontal = Dimens.spaceMd),
+        )
+        Text(total, style = Deck.type.labelMd, color = c.onSurfaceVariant, maxLines = 1)
     }
 }
 
