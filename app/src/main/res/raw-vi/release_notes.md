@@ -1,3 +1,8 @@
+## 0.3.0 — 2026-11-20
+- Chế độ Tối giản mới ở màn hình chính: đĩa than quay, thông tin bài và ba nút lớn (công tắc ở trên cùng: ĐẦU MÁY / TỐI GIẢN)
+- Icon app mới
+- Đổi nhãn trên đầu máy thành "ĐANG QUAY"
+
 ## 0.2.0 — 2026-11-19
 - Chọn ngôn ngữ trong app (English / Tiếng Việt)
 - Màn hình Cài đặt với các tab Giao diện, Ghi chú phát hành và Ngôn ngữ

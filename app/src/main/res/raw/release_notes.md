@@ -1,3 +1,8 @@
+## 0.3.0 — 2026-11-20
+- New Pure Minimal mode on MAIN: a spinning record, the track and three big keys (switch at the top: PRO DECK / PURE MINIMAL)
+- New app icon
+- Vietnamese: "ĐANG QUAY" label on the deck
+
 ## 0.2.0 — 2026-11-19
 - In-app language switch (English / Tiếng Việt)
 - Settings screen with Skin, Release notes and Language tabs
