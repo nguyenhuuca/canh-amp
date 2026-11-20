@@ -1,14 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher foreground from the owner's Stitch "Canhamp App Icon" (512 px source, scaled into the 66 dp safe zone). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Equalizer bars -->
-    <path android:fillColor="#00FF41" android:pathData="M30,60h8v18h-8z" />
-    <path android:fillColor="#00FF41" android:pathData="M42,46h8v32h-8z" />
-    <path android:fillColor="#00FF41" android:pathData="M58,52h8v26h-8z" />
-    <path android:fillColor="#00FF41" android:pathData="M70,40h8v38h-8z" />
-    <!-- Lightning bolt -->
-    <path android:fillColor="#00FF41" android:pathData="M56,24L44,44h8l-4,14l14,-22h-8z" />
+    <group
+        android:scaleX="0.17"
+        android:scaleY="0.17"
+        android:translateX="10.48"
+        android:translateY="10.48">
+
+        <!-- Spectrum bars -->
+        <path
+            android:fillAlpha="0.25"
+            android:fillColor="#00FF41"
+            android:pathData="M96,320h16v50h-16z M124,280h16v90h-16z M152,250h16v120h-16z M180,300h16v70h-16z M316,310h16v60h-16z M344,260h16v110h-16z M372,290h16v80h-16z M400,330h16v40h-16z" />
+
+        <!-- Glow behind the bolt -->
+        <path android:pathData="M256,56a200,200 0,1 1,0 400a200,200 0,1 1,0 -400z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="radial"
+                    android:centerX="256"
+                    android:centerY="256"
+                    android:gradientRadius="200">
+                    <item android:offset="0" android:color="#4DFFB700" />
+                    <item android:offset="0.5" android:color="#1F00FF41" />
+                    <item android:offset="1" android:color="#0000FF41" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <!-- Bolt shadow -->
+        <path
+            android:fillAlpha="0.55"
+            android:fillColor="#000000"
+            android:pathData="M300,100L174,264L250,264L214,436L360,248L280,248Z" />
+
+        <!-- Neon edge -->
+        <path
+            android:strokeAlpha="0.35"
+            android:strokeColor="#FFE600"
+            android:strokeLineJoin="round"
+            android:strokeWidth="14"
+            android:pathData="M294,88L168,252L244,252L208,424L354,236L274,236Z" />
+
+        <!-- Bolt body -->
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2"
+            android:pathData="M294,88L168,252L244,252L208,424L354,236L274,236Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="205"
+                    android:startY="88"
+                    android:endX="317"
+                    android:endY="424">
+                    <item android:offset="0" android:color="#FFFFFB99" />
+                    <item android:offset="0.25" android:color="#FFFFE600" />
+                    <item android:offset="0.65" android:color="#FFFF9900" />
+                    <item android:offset="1" android:color="#FFE64A00" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <!-- Bevel facets -->
+        <path
+            android:fillAlpha="0.32"
+            android:fillColor="#FFFFFF"
+            android:pathData="M294,88L244,252L274,236L354,236Z" />
+        <path
+            android:fillAlpha="0.28"
+            android:fillColor="#000000"
+            android:pathData="M168,252L208,424L244,252Z" />
+    </group>
 </vector>
