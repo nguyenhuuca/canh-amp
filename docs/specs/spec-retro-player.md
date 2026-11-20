@@ -223,7 +223,7 @@ Position updates come from a ticker at 4 Hz while playing (UI side).
   - BAR mode draws 16 columns of 2 dp segments: the bottom 10 green, the next 4 amber, the top 2 orange, plus a peak-hold dot that decays at 12 dB/s.
   - WAVE mode draws the last 256 mono samples as a polyline.
   - When paused or stopped, the bars fall to the floor within 500 ms.
-  - If `visAnimated` is off, draw the static peak-hold only. (R10, R25)
+  - If `visAnimated` is off, nothing follows the music: BAR draws the unlit grid, WAVE a flat line, and the spectrum is not collected (the FFT does not run). Changed 2026-11-20: the peak dots used to keep moving. (R10, R25)
 - **B27** If the current item fails to open or decode (`PlaybackException`), show `ERR: CANNOT READ FILE` in the marquee for 3 s and skip to the next item. After 5 failures in a row, stop. (R8)
 - **B28** Seek bar drag: preview the time while dragging, and seek once on release. (R11)
 - **B29** Volume: `player.volume` (0..1) maps linearly to 0..100%, in steps of 1%. The value persists. (R11)

@@ -30,9 +30,13 @@ private val ColumnGap = 2.dp
 fun litSegments(level: Float): Int =
     if (level.isNaN()) 0 else Math.round(level.coerceIn(0f, 1f) * SEGMENTS)
 
+/** Lit segments and peak segment (0 = none) for one band; both 0 when not [animated] (B26). */
+fun shownSegments(level: Float, peak: Float, animated: Boolean): Pair<Int, Int> =
+    if (animated) litSegments(level) to litSegments(peak) else 0 to 0
+
 /**
  * Decorative 16-band visualizer on one Canvas. BAR draws segmented columns with a peak dot; WAVE draws a
- * polyline. With [animated] off only the peak dots are drawn (B26).
+ * polyline. With [animated] off nothing follows the music: BAR shows the unlit grid, WAVE a flat line (B26).
  */
 @Composable
 fun SpectrumView(
@@ -75,18 +79,16 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawBars(
     val step = segH + SegmentGap.toPx()
     for (b in 0 until bands) {
         val x = b * (colW + gap)
-        val lit = if (animated) litSegments(frame.bands.getOrElse(b) { 0f }) else 0
-        val peak = litSegments(frame.peaks.getOrElse(b) { 0f })
+        val (lit, peak) = shownSegments(frame.bands.getOrElse(b) { 0f }, frame.peaks.getOrElse(b) { 0f }, animated)
         for (i in 0 until SEGMENTS) {
             val y = size.height - i * step - segH
             val isPeak = peak > 0 && i == peak - 1
             val color = when {
                 i < lit -> segmentColor(i, green, amber, orange)
                 isPeak -> segmentColor(i, green, amber, orange)
-                animated -> off
-                else -> Color.Transparent
+                else -> off
             }
-            if (color != Color.Transparent) drawRect(color, Offset(x, y), Size(colW, segH))
+            drawRect(color, Offset(x, y), Size(colW, segH))
         }
     }
 }

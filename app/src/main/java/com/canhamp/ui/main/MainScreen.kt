@@ -82,12 +82,17 @@ fun MainScreen(
 
     when (state.mainMode) {
         MainMode.DECK -> {
-            // Cold flow: the analyser only runs while the deck is shown and resumed (B26).
+            // Cold flow: the analyser only runs while the deck is shown, resumed and animated (B26).
             val frames = remember(engine) { engine.spectrumFrames() }
-            val frame by frames.collectAsStateWithLifecycle(
-                initialValue = SpectrumFrame.EMPTY,
-                minActiveState = Lifecycle.State.RESUMED,
-            )
+            val frame = if (state.visAnimated) {
+                val live by frames.collectAsStateWithLifecycle(
+                    initialValue = SpectrumFrame.EMPTY,
+                    minActiveState = Lifecycle.State.RESUMED,
+                )
+                live
+            } else {
+                SpectrumFrame.EMPTY
+            }
             MainScreenContent(
                 state = state,
                 frame = frame,
