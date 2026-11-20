@@ -1,7 +1,7 @@
 task: Canh Amp - retro MP3 player Android app
 status: done
 progress: 100
-done: v0.1.0 released; v0.2.0 released (Settings, language); v0.3.0 Pure Minimal mode + new icon
-next: owner checks v0.3.0 on device
+done: v0.1.0 released; v0.2.0 released (Settings, language); v0.3.0 Pure Minimal + new icon; v0.3.1 mini player hidden in Pure Minimal
+next: owner checks v0.3.1 on device
 plan: docs/plans/plan-retro-player.md
-updated: 2026-11-20 21:12
+updated: 2026-11-20 21:29

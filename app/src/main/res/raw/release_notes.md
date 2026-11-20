@@ -1,3 +1,6 @@
+## 0.3.1 — 2026-11-20
+- Pure Minimal: the mini player bar is hidden on MAIN
+
 ## 0.3.0 — 2026-11-20
 - New Pure Minimal mode on MAIN: a spinning record, the track and three big keys (switch at the top: PRO DECK / PURE MINIMAL)
 - New app icon

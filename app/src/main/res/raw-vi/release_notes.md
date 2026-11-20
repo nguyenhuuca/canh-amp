@@ -1,3 +1,6 @@
+## 0.3.1 — 2026-11-20
+- Chế độ Tối giản: ẩn thanh mini player ở màn hình chính
+
 ## 0.3.0 — 2026-11-20
 - Chế độ Tối giản mới ở màn hình chính: đĩa than quay, thông tin bài và ba nút lớn (công tắc ở trên cùng: ĐẦU MÁY / TỐI GIẢN)
 - Icon app mới
