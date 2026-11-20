@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.canhamp.CanhAmpApp
 import com.canhamp.R
+import com.canhamp.data.settings.MainMode
 import com.canhamp.data.settings.RepeatSetting
 import com.canhamp.playback.dsp.DspStatus
 import com.canhamp.playback.dsp.SpectrumFrame
@@ -63,19 +64,8 @@ fun MainScreen(
     var showDetails by remember { mutableStateOf(false) }
     val currentTrackId = state.now.trackId
     val engine = (LocalContext.current.applicationContext as CanhAmpApp).container.dspEngine
-    // Cold flow: the analyser only runs while this screen is resumed (B26).
-    val frames = remember(engine) { engine.spectrumFrames() }
-    val frame by frames.collectAsStateWithLifecycle(
-        initialValue = SpectrumFrame.EMPTY,
-        minActiveState = Lifecycle.State.RESUMED,
-    )
-
-    MainScreenContent(
-        state = state,
-        frame = frame,
-        onOpen = onOpen,
-        onOpenEq = onOpenEq,
-        actions = DeckActions(
+    val actions = remember(vm) {
+        DeckActions(
             toggleTime = vm::toggleTimeMode,
             cycleVis = vm::cycleVisMode,
             seek = vm::seek,
@@ -86,16 +76,36 @@ fun MainScreen(
             next = vm::next,
             toggleShuffle = vm::toggleShuffle,
             cycleRepeat = vm::cycleRepeat,
-        ),
-        onShowDetails = { showDetails = true },
-    )
+            setMode = vm::setMainMode,
+        )
+    }
+
+    when (state.mainMode) {
+        MainMode.DECK -> {
+            // Cold flow: the analyser only runs while the deck is shown and resumed (B26).
+            val frames = remember(engine) { engine.spectrumFrames() }
+            val frame by frames.collectAsStateWithLifecycle(
+                initialValue = SpectrumFrame.EMPTY,
+                minActiveState = Lifecycle.State.RESUMED,
+            )
+            MainScreenContent(
+                state = state,
+                frame = frame,
+                onOpen = onOpen,
+                onOpenEq = onOpenEq,
+                actions = actions,
+                onShowDetails = { showDetails = true },
+            )
+        }
+        MainMode.MINIMAL -> MinimalScreenContent(state, actions)
+    }
     if (showDetails && currentTrackId != null) {
         TrackDetailsSheet(trackId = currentTrackId, onDismiss = { showDetails = false })
     }
 }
 
 /** Everything the deck can ask of the player, so the content composable needs no view model. */
-private class DeckActions(
+internal class DeckActions(
     val toggleTime: () -> Unit = {},
     val cycleVis: () -> Unit = {},
     val seek: (Long) -> Unit = {},
@@ -106,7 +116,20 @@ private class DeckActions(
     val next: () -> Unit = {},
     val toggleShuffle: () -> Unit = {},
     val cycleRepeat: () -> Unit = {},
+    val setMode: (MainMode) -> Unit = {},
 )
+
+/** The Pure Minimal layout: the mode switch and the vinyl player, no spectrum analyser running. */
+@Composable
+private fun MinimalScreenContent(state: MainUiState, actions: DeckActions) {
+    Column(
+        Modifier.verticalScroll(rememberScrollState()).padding(vertical = Dimens.spaceMd),
+        verticalArrangement = Arrangement.spacedBy(Dimens.spaceXl),
+    ) {
+        MainModeSwitch(state.mainMode, actions.setMode)
+        MinimalPlayer(state, actions)
+    }
+}
 
 /** The deck's modules for one [state]. */
 @Composable
@@ -122,6 +145,7 @@ private fun MainScreenContent(
         Modifier.verticalScroll(rememberScrollState()).padding(vertical = Dimens.spaceMd),
         verticalArrangement = Arrangement.spacedBy(Dimens.spaceLg),
     ) {
+        MainModeSwitch(state.mainMode, actions.setMode)
         ChassisPlate(state.dsp)
         DeckDisplay(state, frame, actions.toggleTime, actions.cycleVis)
         SeekModule(state, actions.seek)
@@ -278,4 +302,28 @@ private fun FooterPlate() {
         }
     }
     Spacer(Modifier.height(Dimens.spaceMd))
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF101417, widthDp = 360, heightDp = 900)
+@Composable
+private fun MinimalScreenPreview() = CanhAmpTheme {
+    MinimalScreenContent(
+        state = MainUiState(
+            now = NowPlaying(
+                trackId = 1L,
+                title = "Night Drive",
+                artist = "Some Artist",
+                album = "Some Album",
+                durationMs = 246_000,
+                positionMs = 161_000,
+                queueSize = 12,
+                index = 4,
+                sampleRateHz = 96_000,
+                mimeType = "audio/flac",
+                isPlaying = true,
+            ),
+            mainMode = MainMode.MINIMAL,
+        ),
+        actions = DeckActions(),
+    )
 }

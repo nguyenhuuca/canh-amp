@@ -41,12 +41,13 @@ class SettingsMapperTest {
 
     @Test fun badEnumStringsFallBackToDefaults() {
         val s = SettingsMapper.fromPreferences(
-            mapOf("theme" to "NOPE", "repeat" to "x", "timeMode" to "", "visMode" to 5),
+            mapOf("theme" to "NOPE", "repeat" to "x", "timeMode" to "", "visMode" to 5, "mainMode" to "BOGUS"),
         )
         assertEquals(ThemeId.CLASSIC, s.theme)
         assertEquals(RepeatSetting.OFF, s.repeat)
         assertEquals(TimeMode.ELAPSED, s.timeMode)
         assertEquals(VisMode.BAR, s.visMode)
+        assertEquals(MainMode.DECK, s.mainMode)
     }
 
     @Test fun valuesAreReadAndClamped() {
@@ -64,5 +65,10 @@ class SettingsMapperTest {
         assertEquals(0, s.queueIndex)
         assertEquals(42L, s.queuePositionMs)
         assertEquals(true, s.shuffle)
+    }
+
+    @Test fun mainModeIsRead() {
+        assertEquals(MainMode.MINIMAL, SettingsMapper.fromPreferences(mapOf("mainMode" to "MINIMAL")).mainMode)
+        assertEquals(MainMode.DECK, SettingsMapper.fromPreferences(emptyMap()).mainMode)
     }
 }

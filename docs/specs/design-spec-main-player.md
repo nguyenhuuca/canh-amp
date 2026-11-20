@@ -59,3 +59,17 @@ See what is playing and control it like a hardware deck. Most important action: 
 - The timer has a `liveRegion` set to polite, announced only on toggle, not every second.
 - The `SpectrumView` is decorative (`invisibleToUser`); the marquee exposes the full text once as its content description.
 - Transport buttons use labels from the shell keys; the active state is announced ("Play, selected").
+
+## Pure Minimal mode (added 2026-11-20, owner request)
+
+Source: Stitch screen "Canhamp Pure Minimal Player" (be1ebb9f514c4408829cd48baebebeed).
+
+- **Switch:** a two-segment control at the top of MAIN, `PRO DECK` / `PURE MINIMAL` (VI `ĐẦU MÁY` / `TỐI GIẢN`), `Role.Tab`, 48 dp hit area. The choice persists in DataStore (`mainMode`, default `DECK`).
+- **Layout, top to bottom:**
+  1. A vinyl record, at most 290 dp wide. It turns once every 18 s while playing and stops in place on pause. It does not turn when visualizer animation is off. The centre label shows the cover art, or the artist with a `SIDE A • 33 RPM` mark.
+  2. A `TRK nn` chip with the format badge, the title (up to 2 lines) and `artist • album`.
+  3. A slim seek bar. Tap or drag to seek, with one seek on release (B28). Below it: elapsed, then `FORMAT • kHz`, then the duration.
+  4. Three round keys: previous, a large play/pause, next.
+- **Not shown:** the design's header (network, logo, avatar) and its 4-tab nav. The app keeps its own shell. The "HI-RES" badge is dropped because the DSP chain plays 16-bit (ADR-0001).
+- **Power:** the spectrum analyser is not collected in this mode.
+- **Empty queue:** `NO TRACK LOADED`, and the keys are disabled.

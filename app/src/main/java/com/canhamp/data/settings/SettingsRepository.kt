@@ -41,6 +41,7 @@ class SettingsRepository(private val store: DataStore<Preferences>) : ScanGenera
 
     suspend fun setTimeMode(mode: TimeMode) = put { it[TIME_MODE] = mode.name }
     suspend fun setVisMode(mode: VisMode) = put { it[VIS_MODE] = mode.name }
+    suspend fun setMainMode(mode: MainMode) = put { it[MAIN_MODE] = mode.name }
     override suspend fun setVisAnimated(on: Boolean) = put { it[VIS_ANIMATED] = on }
 
     override suspend fun setPreserveEqColors(on: Boolean) = put { it[PRESERVE_EQ_COLORS] = on }
@@ -79,5 +80,6 @@ class SettingsRepository(private val store: DataStore<Preferences>) : ScanGenera
         val SCAN_GENERATION = longPreferencesKey(SettingsMapper.SCAN_GENERATION)
         val LAST_SCAN_AT_MS = longPreferencesKey(SettingsMapper.LAST_SCAN_AT_MS)
         val PRESERVE_EQ_COLORS = booleanPreferencesKey(SettingsMapper.PRESERVE_EQ_COLORS)
+        val MAIN_MODE = stringPreferencesKey(SettingsMapper.MAIN_MODE)
     }
 }

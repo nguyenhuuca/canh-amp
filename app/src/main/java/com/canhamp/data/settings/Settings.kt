@@ -6,6 +6,9 @@ enum class RepeatSetting { OFF, ALL, ONE }
 enum class TimeMode { ELAPSED, REMAINING }
 enum class VisMode { BAR, WAVE }
 
+/** Layout of the MAIN tab: the full rack deck or the minimal vinyl player. */
+enum class MainMode { DECK, MINIMAL }
+
 data class Settings(
     val theme: ThemeId = ThemeId.CLASSIC,
     val shuffle: Boolean = false,
@@ -26,6 +29,7 @@ data class Settings(
     val scanGeneration: Long = 0L,
     val lastScanAtMs: Long = 0L,
     val preserveEqColors: Boolean = false,
+    val mainMode: MainMode = MainMode.DECK,
 ) {
     override fun equals(other: Any?): Boolean =
         other is Settings && theme == other.theme && shuffle == other.shuffle && repeat == other.repeat &&
@@ -35,11 +39,11 @@ data class Settings(
             timeMode == other.timeMode && visMode == other.visMode && visAnimated == other.visAnimated &&
             queueIndex == other.queueIndex && queuePositionMs == other.queuePositionMs &&
             scanGeneration == other.scanGeneration && lastScanAtMs == other.lastScanAtMs &&
-            preserveEqColors == other.preserveEqColors
+            preserveEqColors == other.preserveEqColors && mainMode == other.mainMode
 
     override fun hashCode(): Int = listOf(
         theme, shuffle, repeat, volume, balance, eqEnabled, eqGains.contentHashCode(), eqPreamp,
         eqPresetName, bassDb, trebleDb, timeMode, visMode, visAnimated, queueIndex, queuePositionMs,
-        scanGeneration, lastScanAtMs, preserveEqColors,
+        scanGeneration, lastScanAtMs, preserveEqColors, mainMode,
     ).hashCode()
 }

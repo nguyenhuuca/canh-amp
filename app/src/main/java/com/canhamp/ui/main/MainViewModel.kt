@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.canhamp.CanhAmpApp
+import com.canhamp.data.settings.MainMode
 import com.canhamp.data.settings.SettingsRepository
 import com.canhamp.data.settings.TimeMode
 import com.canhamp.data.settings.VisMode
@@ -30,6 +31,7 @@ data class MainUiState(
     val dsp: DspStatus = DspStatus.ACTIVE,
     /** True for 3 s after a playback failure (B27). */
     val readError: Boolean = false,
+    val mainMode: MainMode = MainMode.DECK,
 ) {
     val hasQueue: Boolean get() = now.queueSize > 0
 }
@@ -49,7 +51,7 @@ class MainViewModel(
         dsp.status,
         readError,
     ) { now, s, status, err ->
-        MainUiState(now, s.timeMode, s.visMode, s.visAnimated, status, err)
+        MainUiState(now, s.timeMode, s.visMode, s.visAnimated, status, err, s.mainMode)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), MainUiState())
 
     init {
@@ -73,6 +75,10 @@ class MainViewModel(
     fun cycleVisMode() {
         val next = if (state.value.visMode == VisMode.BAR) VisMode.WAVE else VisMode.BAR
         viewModelScope.launch { settings.setVisMode(next) }
+    }
+
+    fun setMainMode(mode: MainMode) {
+        viewModelScope.launch { settings.setMainMode(mode) }
     }
 
     fun play() = player.play()

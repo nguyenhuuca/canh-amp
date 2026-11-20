@@ -251,4 +251,9 @@
     <string name="skins_cd_applied">đã áp dụng</string>
     <string name="skins_cd_not_applied">chưa áp dụng</string>
     <string name="skins_cd_apply">Áp dụng %1$s</string>
+    <!-- Main screen layout switch and Pure Minimal player -->
+    <string name="main_mode_deck">ĐẦU MÁY</string>
+    <string name="main_mode_minimal">TỐI GIẢN</string>
+    <string name="minimal_side">MẶT A • 33 RPM</string>
+    <string name="minimal_track">BÀI %1$02d</string>
 </resources>

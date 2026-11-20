@@ -268,4 +268,9 @@
     <string name="skins_cd_applied">applied</string>
     <string name="skins_cd_not_applied">not applied</string>
     <string name="skins_cd_apply">Apply %1$s</string>
+    <!-- Main screen layout switch and Pure Minimal player -->
+    <string name="main_mode_deck">PRO DECK</string>
+    <string name="main_mode_minimal">PURE MINIMAL</string>
+    <string name="minimal_side">SIDE A • 33 RPM</string>
+    <string name="minimal_track">TRK %1$02d</string>
 </resources>
