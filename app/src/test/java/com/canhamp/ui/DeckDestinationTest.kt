@@ -1,8 +1,11 @@
 package com.canhamp.ui
 
+import com.canhamp.data.settings.MainMode
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DeckDestinationTest {
@@ -36,5 +39,13 @@ class DeckDestinationTest {
 
     @Test fun backOnMainExits() {
         assertNull(backTarget(DeckDestination.MAIN))
+    }
+
+    @Test fun miniPlayerHiddenOnlyOnMinimalMain() {
+        assertFalse(showMiniPlayer(DeckDestination.MAIN, MainMode.MINIMAL))
+        assertTrue(showMiniPlayer(DeckDestination.MAIN, MainMode.DECK))
+        DeckDestination.entries.filter { it != DeckDestination.MAIN }.forEach {
+            assertTrue(showMiniPlayer(it, MainMode.MINIMAL))
+        }
     }
 }

@@ -117,6 +117,7 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
     val current = DeckDestination.fromRoute(entry?.destination?.route) ?: DeckDestination.start
     val mini by shell.miniPlayer.collectAsState()
     val stereo by shell.stereo.collectAsState()
+    val mainMode by shell.mainMode.collectAsState()
     val player = (LocalContext.current.applicationContext as CanhAmpApp).container.playerConnection
     var sheetRow by remember { mutableStateOf<TrackRow?>(null) }
     var detailsId by remember { mutableStateOf<Long?>(null) }
@@ -225,7 +226,7 @@ fun AppNavGraph(shell: ShellViewModel = viewModel(factory = ShellViewModel.Facto
                 composable(DeckDestination.SETTINGS.route) { SettingsScreen() }
             }
             MiniPlayerBar(
-                state = mini,
+                state = if (showMiniPlayer(current, mainMode)) mini else null,
                 onOpen = { nav.switchTab(DeckDestination.MAIN) },
                 onPrev = shell::previous,
                 onPlayPause = shell::togglePlayPause,

@@ -72,4 +72,5 @@ Source: Stitch screen "Canhamp Pure Minimal Player" (be1ebb9f514c4408829cd48baeb
   4. Three round keys: previous, a large play/pause, next.
 - **Not shown:** the design's header (network, logo, avatar) and its 4-tab nav. The app keeps its own shell. The "HI-RES" badge is dropped because the DSP chain plays 16-bit (ADR-0001).
 - **Power:** the spectrum analyser is not collected in this mode.
+- **Mini player:** hidden on MAIN in this mode, because the big keys replace it. It shows on the other tabs as usual.
 - **Empty queue:** `NO TRACK LOADED`, and the keys are disabled.
