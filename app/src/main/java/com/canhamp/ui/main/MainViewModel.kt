@@ -32,6 +32,8 @@ data class MainUiState(
     /** True for 3 s after a playback failure (B27). */
     val readError: Boolean = false,
     val mainMode: MainMode = MainMode.DECK,
+    /** False until settings have loaded, so a saved MINIMAL layout does not flash the deck first. */
+    val loaded: Boolean = false,
 ) {
     val hasQueue: Boolean get() = now.queueSize > 0
 }
@@ -51,7 +53,7 @@ class MainViewModel(
         dsp.status,
         readError,
     ) { now, s, status, err ->
-        MainUiState(now, s.timeMode, s.visMode, s.visAnimated, status, err, s.mainMode)
+        MainUiState(now, s.timeMode, s.visMode, s.visAnimated, status, err, s.mainMode, loaded = true)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), MainUiState())
 
     init {

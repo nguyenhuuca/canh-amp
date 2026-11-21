@@ -44,8 +44,10 @@ class DeckDestinationTest {
     @Test fun miniPlayerHiddenOnlyOnMinimalMain() {
         assertFalse(showMiniPlayer(DeckDestination.MAIN, MainMode.MINIMAL))
         assertTrue(showMiniPlayer(DeckDestination.MAIN, MainMode.DECK))
+        assertFalse(showMiniPlayer(DeckDestination.MAIN, null))
         DeckDestination.entries.filter { it != DeckDestination.MAIN }.forEach {
             assertTrue(showMiniPlayer(it, MainMode.MINIMAL))
+            assertTrue(showMiniPlayer(it, null))
         }
     }
 }

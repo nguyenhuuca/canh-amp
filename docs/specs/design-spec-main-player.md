@@ -72,5 +72,6 @@ Source: Stitch screen "Canhamp Pure Minimal Player" (be1ebb9f514c4408829cd48baeb
   4. Three round keys: previous, a large play/pause, next.
 - **Not shown:** the design's header (network, logo, avatar) and its 4-tab nav. The app keeps its own shell. The "HI-RES" badge is dropped because the DSP chain plays 16-bit (ADR-0001).
 - **Power:** the spectrum analyser is not collected in this mode.
-- **Mini player:** hidden on MAIN in this mode, because the big keys replace it. It shows on the other tabs as usual.
+- **Mini player:** hidden on MAIN in this mode, because the big keys replace it. It shows on the other tabs as usual. On MAIN it also stays hidden until the saved mode has loaded, and MAIN draws nothing until then, so a saved minimal layout never flashes the deck.
+- **Reduced motion:** with the system animation scale at 0 the record does not turn.
 - **Empty queue:** `NO TRACK LOADED`, and the keys are disabled.

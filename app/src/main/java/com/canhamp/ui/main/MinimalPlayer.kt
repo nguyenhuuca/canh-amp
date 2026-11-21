@@ -59,7 +59,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.canhamp.R
-import com.canhamp.playback.NowPlaying
+import com.canhamp.ui.components.rememberReducedMotion
 import com.canhamp.ui.theme.Deck
 import com.canhamp.ui.theme.Dimens
 import com.canhamp.util.formatDuration
@@ -72,7 +72,20 @@ private val PlaySize = 80.dp
 private val SkipSize = 56.dp
 private const val SPIN_MS = 18_000
 
-/** The Pure Minimal player: a spinning record, the track, a slim seek bar and three keys. */
+/** Which transport key the big round button shows. */
+enum class PlayKey { PLAY, PAUSE }
+
+/** The big key pauses while playing and plays otherwise. */
+fun playKey(isPlaying: Boolean): PlayKey = if (isPlaying) PlayKey.PAUSE else PlayKey.PLAY
+
+/**
+ * The record turns only while playing, with the animated visualizer allowed, and when the system does not ask
+ * for reduced motion (animation scale 0 would otherwise make every turn finish at once, every frame).
+ */
+fun vinylSpinning(isPlaying: Boolean, visAnimated: Boolean, reducedMotion: Boolean): Boolean =
+    isPlaying && visAnimated && !reducedMotion
+
+/** The Pure Minimal player: a spinning record, the track, times and three keys. */
 @Composable
 internal fun MinimalPlayer(state: MainUiState, actions: DeckActions, modifier: Modifier = Modifier) {
     val now = state.now
@@ -82,7 +95,12 @@ internal fun MinimalPlayer(state: MainUiState, actions: DeckActions, modifier: M
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Dimens.spaceXl),
     ) {
-        Vinyl(now, spinning = now.isPlaying && state.visAnimated, Modifier.widthIn(max = VinylMax).fillMaxWidth())
+        Vinyl(
+            artworkData = now.artworkData,
+            artist = now.artist,
+            spinning = vinylSpinning(now.isPlaying, state.visAnimated, rememberReducedMotion()),
+            modifier = Modifier.widthIn(max = VinylMax).fillMaxWidth(),
+        )
         TrackInfo(state)
         MinimalTimes(state)
         Row(
@@ -90,16 +108,31 @@ internal fun MinimalPlayer(state: MainUiState, actions: DeckActions, modifier: M
             horizontalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            RoundKey(Icons.Filled.SkipPrevious, stringResource(R.string.cd_previous), SkipSize, state.hasQueue, primary = false, actions.previous)
             RoundKey(
-                if (now.isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                stringResource(if (now.isPlaying) R.string.cd_pause else R.string.cd_play),
-                PlaySize,
-                state.hasQueue,
-                primary = true,
-                onClick = if (now.isPlaying) actions.pause else actions.play,
+                icon = Icons.Filled.SkipPrevious,
+                description = stringResource(R.string.cd_previous),
+                size = SkipSize,
+                enabled = state.hasQueue,
+                primary = false,
+                onClick = actions.previous,
             )
-            RoundKey(Icons.Filled.SkipNext, stringResource(R.string.cd_next), SkipSize, state.hasQueue, primary = false, actions.next)
+            val key = playKey(now.isPlaying)
+            RoundKey(
+                icon = if (key == PlayKey.PAUSE) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                description = stringResource(if (key == PlayKey.PAUSE) R.string.cd_pause else R.string.cd_play),
+                size = PlaySize,
+                enabled = state.hasQueue,
+                primary = true,
+                onClick = if (key == PlayKey.PAUSE) actions.pause else actions.play,
+            )
+            RoundKey(
+                icon = Icons.Filled.SkipNext,
+                description = stringResource(R.string.cd_next),
+                size = SkipSize,
+                enabled = state.hasQueue,
+                primary = false,
+                onClick = actions.next,
+            )
         }
         if (state.readError) {
             Text(stringResource(R.string.err_cannot_read), style = Deck.type.labelMd, color = c.error, maxLines = 1)
@@ -108,7 +141,7 @@ internal fun MinimalPlayer(state: MainUiState, actions: DeckActions, modifier: M
 }
 
 @Composable
-private fun Vinyl(now: NowPlaying, spinning: Boolean, modifier: Modifier) {
+private fun Vinyl(artworkData: ByteArray?, artist: String, spinning: Boolean, modifier: Modifier) {
     val c = Deck.colors
     val rotation = remember { Animatable(0f) }
     LaunchedEffect(spinning) {
@@ -158,17 +191,17 @@ private fun Vinyl(now: NowPlaying, spinning: Boolean, modifier: Modifier) {
                     radius = r,
                 )
             }
-            CenterLabel(now)
+            CenterLabel(artworkData, artist)
         }
     }
 }
 
 @Composable
-private fun CenterLabel(now: NowPlaying) {
+private fun CenterLabel(artworkData: ByteArray?, artist: String) {
     val c = Deck.colors
     val targetPx = with(LocalDensity.current) { LabelSize.roundToPx() }
-    val art by produceState<ImageBitmap?>(null, now.artworkData, targetPx) {
-        val bytes = now.artworkData
+    val art by produceState<ImageBitmap?>(null, artworkData, targetPx) {
+        val bytes = artworkData
         value = if (bytes == null) null else withContext(Dispatchers.Default) {
             decodeArtwork(bytes, targetPx)?.asImageBitmap()
         }
@@ -196,7 +229,7 @@ private fun CenterLabel(now: NowPlaying) {
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(horizontal = 10.dp)) {
                 Text(
-                    now.artist.ifBlank { "CANH AMP" }.uppercase(),
+                    artist.ifBlank { "CANH AMP" }.uppercase(),
                     style = Deck.type.labelSm.copy(fontSize = 8.sp),
                     color = c.primaryContainer,
                     maxLines = 1,
@@ -333,7 +366,7 @@ private fun RoundKey(
             .clip(CircleShape)
             .background(if (primary) c.primaryContainer else c.surfaceContainerHigh.copy(alpha = 0.8f))
             .border(1.dp, if (primary) Color.Transparent else c.surfaceVariant.copy(alpha = 0.3f), CircleShape)
-            .clickable(enabled = enabled, role = Role.Button, onClickLabel = description, onClick = onClick)
+            .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) {

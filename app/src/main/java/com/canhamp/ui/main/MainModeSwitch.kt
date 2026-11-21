@@ -64,7 +64,7 @@ private fun Segment(label: String, selected: Boolean, deckIcon: Boolean, modifie
             .heightIn(min = Dimens.minTouch)
             .clip(shape)
             .background(if (selected) c.surfaceContainerHighest else c.surfaceContainer)
-            .selectable(selected = selected, role = Role.Tab, onClick = onClick)
+            .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
             .padding(horizontal = Dimens.spaceMd),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,

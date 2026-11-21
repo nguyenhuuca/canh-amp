@@ -80,6 +80,7 @@ fun MainScreen(
         )
     }
 
+    if (!state.loaded) return
     when (state.mainMode) {
         MainMode.DECK -> {
             // Cold flow: the analyser only runs while the deck is shown, resumed and animated (B26).

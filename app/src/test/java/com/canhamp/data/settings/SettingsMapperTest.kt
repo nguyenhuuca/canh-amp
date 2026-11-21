@@ -3,6 +3,7 @@ package com.canhamp.data.settings
 import com.canhamp.ui.theme.ThemeId
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
 class SettingsMapperTest {
@@ -70,5 +71,13 @@ class SettingsMapperTest {
     @Test fun mainModeIsRead() {
         assertEquals(MainMode.MINIMAL, SettingsMapper.fromPreferences(mapOf("mainMode" to "MINIMAL")).mainMode)
         assertEquals(MainMode.DECK, SettingsMapper.fromPreferences(emptyMap()).mainMode)
+    }
+
+    @Test fun mainModeTakesPartInEquality() {
+        val a = Settings(mainMode = MainMode.DECK)
+        val b = Settings(mainMode = MainMode.MINIMAL)
+        assertNotEquals(a, b)
+        assertEquals(b, Settings(mainMode = MainMode.MINIMAL))
+        assertEquals(b.hashCode(), Settings(mainMode = MainMode.MINIMAL).hashCode())
     }
 }
