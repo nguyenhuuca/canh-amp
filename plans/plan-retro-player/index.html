@@ -1,0 +1,2269 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Product, design and architecture docs for Canh Amp, a retro local music player for Android">
+      
+      
+        <meta name="author" content="nguyenhuuca">
+      
+      
+      
+        <link rel="prev" href="../../sequence/sequence-retro-player/">
+      
+      
+        <link rel="next" href="../../reports/device-check-2026-11-19/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Retro Player - Canh Amp - Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/diagram-zoom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plan-canh-amp-retro-mp3-player" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Canh Amp - Docs" class="md-header__button md-logo" aria-label="Canh Amp - Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Canh Amp - Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Retro Player
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/nguyenhuuca/canh-amp" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nguyenhuuca/canh-amp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../tracking/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Feature Tracking
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../adr/0001-audio-dsp-pipeline/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  ADR
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../prd/PRD-retro-player/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  PRD
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../specs/spec-retro-player/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Specs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../design/stitch/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../sequence/sequence-retro-player/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Sequence Diagrams
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Plans
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reports/device-check-2026-11-19/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reports
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Canh Amp - Docs" class="md-nav__button md-logo" aria-label="Canh Amp - Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Canh Amp - Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/nguyenhuuca/canh-amp" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nguyenhuuca/canh-amp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Tracking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADR
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0001-audio-dsp-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001 - Audio DSP Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0002-visualizer-pcm-tap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002 - Visualizer PCM Tap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0003-persistence-room-datastore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003 - Room + DataStore Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0004-app-id-sdk-and-ci-signing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004 - App Id, SDK & CI Signing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PRD
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prd/PRD-retro-player/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retro Player
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/spec-retro-player/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retro Player
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Design Specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/design-spec-app-shell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Shell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/design-spec-main-player/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Main Player
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/design-spec-equalizer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equalizer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/design-spec-playlist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playlist
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/design-spec-library/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/design-spec-skins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/design-spec-settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../design/stitch/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sequence Diagrams
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sequence Diagrams
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sequence/sequence-retro-player/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retro Player
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plans
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plans
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retro Player
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retro Player
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Facts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#m1-skeleton-ci-design-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M1: skeleton, CI, design system
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m2-library-and-playback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M2: library and playback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m3-queue-playlists-saf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M3: queue, playlists, SAF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m4-dsp-and-eq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M4: DSP and EQ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m5m7-visualizer-themes-polish-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M5–M7: visualizer, themes, polish, release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reports
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reports
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reports/device-check-2026-11-19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device Check 2026-11-19
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Facts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#m1-skeleton-ci-design-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M1: skeleton, CI, design system
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m2-library-and-playback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M2: library and playback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m3-queue-playlists-saf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M3: queue, playlists, SAF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m4-dsp-and-eq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M4: DSP and EQ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m5m7-visualizer-themes-polish-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M5–M7: visualizer, themes, polish, release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/nguyenhuuca/canh-amp/edit/main/docs/plans/plan-retro-player.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="plan-canh-amp-retro-mp3-player">Plan: Canh Amp, retro MP3 player<a class="headerlink" href="#plan-canh-amp-retro-mp3-player" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Done · <strong>Date:</strong> 2026-11-18 · <strong>Inputs:</strong> <a href="../../prd/PRD-retro-player/">PRD</a>, <a href="../../specs/spec-retro-player/">spec</a>, <a href="../../sequence/sequence-retro-player/">sequences</a>, ADR <a href="../../adr/0001-audio-dsp-pipeline/">0001</a> <a href="../../adr/0002-visualizer-pcm-tap/">0002</a> <a href="../../adr/0003-persistence-room-datastore/">0003</a> <a href="../../adr/0004-app-id-sdk-and-ci-signing/">0004</a>, design specs <code>docs/specs/design-spec-*.md</code></p>
+<h2 id="goal">Goal<a class="headerlink" href="#goal" title="Permanent link">&para;</a></h2>
+<p>Ship Canh Amp v0.1.0 (PRD R1–R30). It is done when every task below is <code>[x]</code>, <code>build.yml</code> is green on <code>main</code> with an
+installable <code>canh-amp-&lt;sha&gt;.apk</code> artifact, the owner's device checklist (T23) passes, and <code>release.yml</code> has published
+<code>v0.1.0</code>.</p>
+<h2 id="facts">Facts<a class="headerlink" href="#facts" title="Permanent link">&para;</a></h2>
+<p>This is a greenfield app: <code>D:\DO\winamp</code> has only docs and the agentic-sdlc scaffold, with no Gradle project yet. The
+patterns to copy come from the owner's reference repo <code>D:\DO\android</code> (DocScanner).</p>
+<p><strong>Build setup</strong></p>
+<ul>
+<li>Gradle wrapper 8.9: <code>D:\DO\android\gradle\wrapper\gradle-wrapper.properties:3</code>. Wrapper jar at <code>D:\DO\android\gradle\wrapper\gradle-wrapper.jar</code>.</li>
+<li>Version catalog: AGP 8.5.2, Kotlin 2.0.21, KSP 2.0.21-1.0.25, Compose BOM 2024.09.00, Navigation 2.8.3, Room 2.6.1, reorderable 2.4.0 (<code>D:\DO\android\gradle\libs.versions.toml:2-15</code>).</li>
+<li><code>settings.gradle.kts</code> repository setup with <code>FAIL_ON_PROJECT_REPOS</code> and a single <code>:app</code> module: <code>D:\DO\android\settings.gradle.kts:1-23</code>.</li>
+<li>Root plugins applied <code>false</code>: <code>D:\DO\android\build.gradle.kts:1-6</code>.</li>
+<li><code>gradle.properties</code>: <code>-Xmx2048m</code>, <code>nonTransitiveRClass</code>: <code>D:\DO\android\gradle.properties:1-4</code>.</li>
+</ul>
+<p><strong>App module</strong></p>
+<ul>
+<li>compileSdk 35, minSdk 26: <code>D:\DO\android\app\build.gradle.kts:10,14</code>.</li>
+<li>Release signing from env <code>KEYSTORE_PATH</code> and friends, active only when set: <code>D:\DO\android\app\build.gradle.kts:22-43</code>.</li>
+<li>Minified release: <code>D:\DO\android\app\build.gradle.kts:41</code>. JVM target 21: <code>D:\DO\android\app\build.gradle.kts:58</code>.</li>
+<li>Unit tests with <code>isReturnDefaultValues = true</code>: <code>D:\DO\android\app\build.gradle.kts:68</code>. Debug coverage: <code>D:\DO\android\app\build.gradle.kts:38</code>.</li>
+<li>Room schema export via the KSP arg <code>room.schemaLocation</code>, committed under <code>app/schemas</code>: <code>D:\DO\android\app\build.gradle.kts:80-83</code>.</li>
+<li>Proguard keeps for Room: <code>D:\DO\android\app\proguard-rules.pro:1-3</code>.</li>
+</ul>
+<p><strong>Wiring</strong></p>
+<ul>
+<li>Manual DI: <code>class AppContainer(context)</code> with <code>by lazy</code> singletons, and Room built via <code>Room.databaseBuilder</code> (<code>D:\DO\android\app\src\main\java\com\docscanner\di\AppContainer.kt:18-23</code>). It is created in <code>MyApplication.onCreate</code> and exposed as <code>container</code> (<code>D:\DO\android\app\src\main\java\com\docscanner\MyApplication.kt:10-21</code>).</li>
+<li>Package layout: <code>common</code>, <code>data</code>, <code>di</code>, <code>domain</code>, <code>ui</code> (+ <code>ui/theme</code>, <code>ui/AppNavGraph.kt</code>) under <code>D:\DO\android\app\src\main\java\com\docscanner\</code>.</li>
+</ul>
+<p><strong>CI</strong></p>
+<ul>
+<li><code>build.yml</code> triggers on <code>master</code> (<code>D:\DO\android\.github\workflows\build.yml:5,7</code>) with <code>permissions</code> read (<code>:9</code>) and JDK 24 (<code>:23</code>). Steps: <code>testDebugUnitTest</code> (<code>:31</code>), then lint with the translation grep (<code>:35-39</code>).</li>
+<li><code>release.yml</code> decodes <code>KEYSTORE_BASE64</code> (<code>D:\DO\android\.github\workflows\release.yml:40</code>) and runs <code>assembleRelease</code> (<code>:43</code>).</li>
+</ul>
+<p><strong>Local toolchain:</strong> OpenJDK 24.0.1 on PATH. Android SDK at <code>C:\Users\CANH\AppData\Local\Android\Sdk</code>, per the reference repo's <code>local.properties</code>. <code>ANDROID_HOME</code> is not set, so <code>local.properties</code> must point <code>sdk.dir</code> there.</p>
+<p><strong>This repo</strong></p>
+<ul>
+<li><code>sdlc.config.json:2-4</code> has <code>deployBranch: main</code> and <code>components: []</code>, so there are no gates yet. Tracking files: <code>TASKS.md</code>, <code>docs/tracking.md</code> (<code>sdlc.config.json:7-10</code>).</li>
+<li><code>.gitignore</code> already blocks <code>*.jks</code>, <code>keystore/</code> and <code>local.properties</code>. <code>.gitattributes</code> forces LF except <code>*.bat</code>.</li>
+</ul>
+<p><strong>Versions:</strong> builders keep the reference repo's versions unless a new library needs newer ones. Media3, DataStore and Paging do not exist in the reference catalog. T1 picks the latest stable releases compatible with AGP 8.5 / Kotlin 2.0 / compileSdk 35 and records them in the catalog (<code>core-directives.md</code> principle 1: check current docs).</p>
+<h2 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h2>
+<p>Each task leaves <code>./gradlew testDebugUnitTest lintDebug assembleDebug</code> green, is ≤ ~400 changed lines where possible
+(<code>sdlc.config.json</code> maxLoc), and adds its tests in the same task. "B" refers to spec behaviours, and "DS" to the design
+spec of the screen.</p>
+<h3 id="m1-skeleton-ci-design-system">M1: skeleton, CI, design system<a class="headerlink" href="#m1-skeleton-ci-design-system" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Task</th>
+<th>Files</th>
+<th>Acceptance criteria</th>
+<th>Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>Gradle project skeleton</td>
+<td><code>settings.gradle.kts</code>, <code>build.gradle.kts</code>, <code>gradle.properties</code>, <code>gradle/libs.versions.toml</code>, <code>gradle/wrapper/*</code>, <code>gradlew(.bat)</code>, <code>app/build.gradle.kts</code>, <code>app/proguard-rules.pro</code>, <code>app/src/main/AndroidManifest.xml</code>, <code>CanhAmpApp.kt</code>, <code>MainActivity.kt</code>, <code>di/AppContainer.kt</code>, <code>util/Durations.kt</code>, <code>values/strings.xml</code>, <code>values-vi/strings.xml</code>, <code>sdlc.config.json</code></td>
+<td>Builds the app per the T1 notes below. <code>DurationsTest</code> covers <code>mm:ss</code>, <code>h:mm:ss</code> and negative remaining time (B24). The three gate commands pass locally.</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>CI workflows and guard checks</td>
+<td><code>.github/workflows/build.yml</code>, <code>.github/workflows/release.yml</code>, <code>scripts/ci/check-forbidden.sh</code></td>
+<td>Implements B71–B73 per the T2 notes below. A push to <code>main</code> gives a green run with the artifact. Planting <code>winamp</code> in a string makes the script fail when run locally.</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>Theme tokens and 4 palettes</td>
+<td><code>ui/theme/{DeckColors,DeckTypography,DeckShapes,Dimens,CanhAmpTheme,ThemeId}.kt</code>, <code>res/font/space_mono_*.ttf</code>, <code>space_grotesk_*.ttf</code>, <code>assets/licenses/OFL.txt</code></td>
+<td>Every token from <code>docs/design/stitch/README.md</code> exists. The four palettes follow B67. <code>PaletteContrastTest</code> asserts on-surface/surface ≥ 4.5:1 and primary text/background ≥ 4.5:1 for each palette.</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>Deck components I</td>
+<td><code>ui/components/{DeckModule,RecessedWell,TactileButton,LedToggle,VfdText,Marquee,HFader}.kt</code></td>
+<td>Each has a <code>@Preview</code>. Pressed state: inverted gradient + 1 dp offset (DS shell). Minimum 48 dp hit area via <code>minimumInteractiveComponentSize</code>. Marquee and LED pulse are static when <code>ANIMATOR_DURATION_SCALE == 0</code> (B70); a <code>ReducedMotion</code> helper is unit-tested.</td>
+<td>T3</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>App shell and navigation</td>
+<td><code>ui/AppNavGraph.kt</code>, <code>ui/components/{DeckHeader,DeckNavBar,MiniPlayerBar}.kt</code>, placeholder <code>ui/{main,eq,playlist,library,skins}/*Screen.kt</code></td>
+<td>5 tabs with save/restore state. Back goes to MAIN, and back on MAIN exits (B69). The mini player is hidden with an empty queue (fed by a fake <code>StateFlow</code> for now). Strings use the EN/VI keys from DS shell.</td>
+<td>T4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>T1 notes.</strong></p>
+<ul>
+<li>App: <code>com.canhamp</code>, minSdk 26, target/compile SDK 35, JVM 21, Compose on.</li>
+<li>Version code from <code>CI_VERSION_CODE</code> (falls back to 1); version name from <code>CI_VERSION_NAME</code> (falls back to <code>0.1.0-dev</code>).</li>
+<li>Debug build: <code>applicationIdSuffix ".debug"</code>, signed with <code>DEBUG_KEYSTORE_PATH</code> when that is set.</li>
+<li>Release build: env signing as in the reference repo, minified.</li>
+<li>The <code>MainActivity</code> hello screen shows "CANH AMP".</li>
+<li><code>sdlc.config.json</code> gets component <code>android</code> with gates <code>./gradlew testDebugUnitTest lintDebug --no-daemon</code>.</li>
+</ul>
+<p><strong>T2 notes.</strong></p>
+<ul>
+<li><code>build.yml</code> (B71, B72): on push/PR to <code>main</code>, <code>permissions: contents: read</code>.<ol>
+<li>JDK 24.</li>
+<li>Unit tests.</li>
+<li>Lint translation grep (copied).</li>
+<li><code>check-forbidden.sh</code>: banned words, plus the merged-manifest permission check.</li>
+<li>Optional debug keystore decode (warning in <code>$GITHUB_STEP_SUMMARY</code> if absent).</li>
+<li><code>assembleDebug</code> with <code>CI_VERSION_CODE=${{ github.run_number }}</code>.</li>
+<li>Upload <code>canh-amp-&lt;shortsha&gt;.apk</code> (retention 14 days) and the test reports.</li>
+<li>Print the APK size in the summary.</li>
+</ol>
+</li>
+<li><code>release.yml</code> (B73): copied, with <code>main</code>, the APK name <code>canh-amp-&lt;ver&gt;.apk</code> and the version env.</li>
+</ul>
+<h3 id="m2-library-and-playback">M2: library and playback<a class="headerlink" href="#m2-library-and-playback" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Task</th>
+<th>Files</th>
+<th>Acceptance criteria</th>
+<th>Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T6</td>
+<td>Persistence layer</td>
+<td><code>data/db/{CanhAmpDatabase,TrackEntity,SafFolderEntity,QueueItemEntity,EqPresetEntity,TrackDao,SafFolderDao,QueueDao,EqPresetDao}.kt</code>, <code>app/schemas/**/1.json</code>, <code>data/settings/{SettingsRepository,Settings}.kt</code>, <code>di/AppContainer.kt</code></td>
+<td>Schema exactly as the spec data model (indexes on <code>folderPath</code>, <code>artist</code>, <code>album</code>, <code>dateAddedSec</code>; <code>eq_presets.name</code> NOCASE unique). <code>SettingsMappingTest</code> covers defaults and CSV parsing for <code>eqGains</code>, with clamping. The DAO instrumented test (<code>androidTest</code>, not in CI) covers upsert by uri, delete by generation and the queue replace transaction. No destructive fallback (ADR-0003).</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>MediaStore scan</td>
+<td><code>data/library/{MediaStoreScanner,TrackRowMapper,LibraryRepository,ScanResult}.kt</code>, <code>util/Logger.kt</code></td>
+<td>B2–B6. <code>TrackRowMapperTest</code> (plain row data class, no Android cursor) covers the title, artist and album fallbacks, format from extension then MIME, the bitrate fallback calculation and <code>folderPath</code> derivation. The <code>LibraryRepositoryTest</code> with a fake scanner and DAO covers generation increment and stale delete, and that concurrent <code>scan()</code> calls run the scanner once. <code>Logger</code> never logs titles or paths (B75).</td>
+<td>T6</td>
+</tr>
+<tr>
+<td>T8</td>
+<td>Library screen</td>
+<td><code>ui/library/{LibraryScreen,LibraryViewModel,PermissionPanel,TrackCard,GroupCard,Breadcrumb}.kt</code>, <code>util/LikeEscaper.kt</code>, catalog adds <code>androidx.paging</code> (runtime + compose)</td>
+<td>DS library states: no permission, scanning, empty, no match and populated. Implements B1, B7 and B9; the storage bar is in T22. <code>LikeEscaperTest</code> covers <code>%</code>, <code>_</code> and <code>\</code>. The <code>LibraryViewModelTest</code> (fake repo) covers the 150 ms search debounce and the tab and folder drill-down state.</td>
+<td>T5, T7</td>
+</tr>
+<tr>
+<td>T9</td>
+<td>Playback service and connection</td>
+<td><code>playback/{CanhAmpPlaybackService,PlayerFactory,PlayerConnection,NowPlaying}.kt</code>, <code>AndroidManifest.xml</code> (service, foregroundServiceType, the permission list from spec Interfaces)</td>
+<td>B20–B23. From Library, ▶, ADD TO QUEUE and PLAY NEXT work (B11, via an action sheet). A media notification appears with lock-screen controls. <code>NowPlayingMapperTest</code> covers the Format → kbps/kHz/stereo mapping. The manifest passes <code>check-forbidden.sh</code>. Manual: unplugging headphones pauses playback.</td>
+<td>T8</td>
+</tr>
+<tr>
+<td>T10</td>
+<td>Main deck screen</td>
+<td><code>ui/main/{MainScreen,MainViewModel,DeckDisplay,TransportDeck,NowPlayingCard}.kt</code>, <code>ui/components/SegmentDigits.kt</code>, <code>res/drawable/cassette_placeholder.xml</code></td>
+<td>DS main states: empty, buffering, paused and playing. Implements B22, B24, B25, B28, B29, B31, B32 and B33. The spectrum area is a static placeholder until T20. Balance UI is disabled until T18. <code>MainViewModelTest</code> covers the timer toggle persisting, the repeat cycle, the "previous" 3 s rule and the marquee text (idle and normal). The mini player is wired to <code>PlayerConnection</code> (replacing T5's fake).</td>
+<td>T9</td>
+</tr>
+<tr>
+<td>T11</td>
+<td>Track details and error handling</td>
+<td><code>data/library/TrackMetadataReader.kt</code>, <code>ui/library/TrackDetailsSheet.kt</code>, <code>playback/PlaybackErrorPolicy.kt</code></td>
+<td>B8: the sample rate is filled on play and on details, and written back. B13/B27: an unreadable file shows <code>ERR: CANNOT READ FILE</code>, skips, and stops after 5 in a row. <code>PlaybackErrorPolicyTest</code> covers the counter reset on success and the stop at 5. Tags are capped at 256 chars (B76). The INFO button on Main opens the details sheet.</td>
+<td>T10</td>
+</tr>
+</tbody>
+</table>
+<h3 id="m3-queue-playlists-saf">M3: queue, playlists, SAF<a class="headerlink" href="#m3-queue-playlists-saf" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Task</th>
+<th>Files</th>
+<th>Acceptance criteria</th>
+<th>Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T12</td>
+<td>Queue persistence and restore</td>
+<td><code>data/queue/QueueRepository.kt</code>, <code>playback/CanhAmpPlaybackService.kt</code></td>
+<td>B55–B57, sequence 2. <code>QueueRepositoryTest</code> (fake DAO) covers the 500 ms debounce, the 5,000 cap and <code>QUEUE FULL</code>. The service restores the queue paused at the saved index and position; position is saved every 10 s, on pause, on transition and in <code>onTaskRemoved</code>. Manual: kill the app at 1:20 on track 3, relaunch, and track 3 is at 1:20, paused.</td>
+<td>T10</td>
+</tr>
+<tr>
+<td>T13</td>
+<td>Playlist screen</td>
+<td><code>ui/playlist/{PlaylistScreen,PlaylistViewModel,QueueRow,ActionGrid}.kt</code>, <code>ui/library/*</code> (pick mode)</td>
+<td>DS playlist states. Implements B58–B63: stats, select/double-tap play, remove with 4 s undo, drag reorder via <code>reorderable</code>, filter, the SORT cycle, one-off RND and the loop cycle. +FILE and +DIR use Library pick mode. <code>PlaylistViewModelTest</code> covers the stats sum formatting, every sort order with the playing item kept, the filter and undo. Accessibility actions Move up/down and Remove.</td>
+<td>T12</td>
+</tr>
+<tr>
+<td>T14</td>
+<td>M3U codec</td>
+<td><code>data/playlist/{M3uCodec,M3uEntry}.kt</code></td>
+<td>Pure Kotlin. <code>M3uCodecTest</code> covers: an encode/decode round trip; EXTINF parsing; absolute, relative (with <code>..</code> normalised), <code>file://</code>, <code>content://</code> and <code>http</code> (marked remote); the line count and line length limits; the ISO-8859-1 fallback; skipping blank and comment lines (B64–B66, B76).</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>T15</td>
+<td>Playlist save and load</td>
+<td><code>data/playlist/PlaylistFileRepository.kt</code>, <code>ui/playlist/*</code> (LIST &gt;&gt; menu)</td>
+<td>Sequence 5. Save writes <code>#EXTM3U</code> UTF-8 with the default name from B64. Load enforces the 2 MB limit, resolves only via <code>TrackDao</code> lookups, confirms before replacing, and toasts <code>LOADED n, MISSING m</code>. <code>PlaylistFileRepositoryTest</code> (fake resolver and DAO) covers mixed resolvable and missing entries and the base dir derived from the document id.</td>
+<td>T13, T14</td>
+</tr>
+<tr>
+<td>T16</td>
+<td>SAF folder import</td>
+<td><code>data/library/SafFolderScanner.kt</code>, <code>data/library/LibraryRepository.kt</code>, <code>ui/library/*</code></td>
+<td>B10 and sequence 7: persisted grant; walk depth ≤ 8 and ≤ 10,000 files; the Empty and AlreadyImported paths; background metadata fill (4 parallel); removing a folder releases the grant and deletes its tracks; lost grants are pruned on start. <code>SafFolderScannerTest</code> (fake document tree) covers the depth and file caps and the extension filter.</td>
+<td>T8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="m4-dsp-and-eq">M4: DSP and EQ<a class="headerlink" href="#m4-dsp-and-eq" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Task</th>
+<th>Files</th>
+<th>Acceptance criteria</th>
+<th>Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T17</td>
+<td>DSP core and 10-band EQ</td>
+<td><code>playback/dsp/{Biquad,BiquadDesign,DspConfig,DspEngine,EqualizerProcessor,PcmConvert}.kt</code></td>
+<td>B40–B44 and ADR-0001. <code>EqualizerProcessorTest</code>: for each band, a sine at the centre frequency with the band at +6 dB rises 6 ±1 dB; the 1 kHz response with only one neighbour band moved changes &lt; 1 dB; the 16 kHz band is skipped at 32 kHz; bypass output equals input byte-for-byte; a config swap mid-stream does not reset state (no discontinuity above −40 dBFS on a steady sine); a non-16-bit input format reports unsupported (B42). Perf: 60 s of 48 kHz stereo processes in &lt; 1.8 s on JVM.</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>T18</td>
+<td>Balance, limiter, auto-preamp, player wiring</td>
+<td><code>playback/dsp/{BalanceProcessor,LimiterProcessor,ResponseCurve}.kt</code>, <code>playback/PlayerFactory.kt</code> (custom <code>RenderersFactory.buildAudioSink</code>), <code>ui/main/*</code> (enable balance)</td>
+<td>B30, B45, B49, B50. <code>LimiterProcessorTest</code>: all bands +12 on a 0 dBFS sine gives no sample at 32767 or −32768; transparent at −6 dBFS (max diff ≤ 1 LSB). <code>BalanceProcessorTest</code> at −1/0/+1. <code>ResponseCurveTest</code>: the analytic peak matches the measured peak within 0.5 dB. Manual: EQ changes are audible on the device.</td>
+<td>T17, T10</td>
+</tr>
+<tr>
+<td>T19</td>
+<td>EQ screen and presets</td>
+<td><code>data/eq/{EqRepository,BuiltInPresets,PresetNameValidator}.kt</code>, <code>ui/eq/{EqScreen,EqViewModel,VFader,Knob,CurveGraph,PresetSheet,SavePresetDialog}.kt</code>, <code>ui/components/{VFader,Knob}.kt</code></td>
+<td>DS equalizer states. Implements B41, B45–B48 and B52, with the preset table exactly as B46. <code>PresetNameValidatorTest</code>: the length limits, characters, built-in collision (case-insensitive) and the overwrite path. <code>EqViewModelTest</code>: an edit gives <code>[CUSTOM]</code>, Reset gives Flat, persistence is debounced 300 ms, and bypass draws a flat curve. Fader semantics announce hertz and decibels.</td>
+<td>T18</td>
+</tr>
+</tbody>
+</table>
+<h3 id="m5m7-visualizer-themes-polish-release">M5–M7: visualizer, themes, polish, release<a class="headerlink" href="#m5m7-visualizer-themes-polish-release" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Task</th>
+<th>Files</th>
+<th>Acceptance criteria</th>
+<th>Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T20</td>
+<td>Spectrum analyser and SpectrumView</td>
+<td><code>playback/dsp/{RingBuffer,Fft,SpectrumTapProcessor,SpectrumAnalyzer,SpectrumFrame}.kt</code>, <code>ui/components/SpectrumView.kt</code>, <code>ui/main/*</code></td>
+<td>ADR-0002, B26, B51, sequence 4. <code>FftTest</code>: the bin of a known sine. <code>SpectrumAnalyzerTest</code>: a 1 kHz sine peaks in the band containing 1 kHz; silence stays at the floor; decay is 18 dB/s; nothing is emitted without subscribers. BAR and WAVE modes; bars fall within 500 ms on pause. The DSP status pill on Main and EQ comes from <code>DspEngine.status</code>. Manual: bars follow the music.</td>
+<td>T18</td>
+</tr>
+<tr>
+<td>T21</td>
+<td>Skins screen and theme apply</td>
+<td><code>ui/skins/{SkinsScreen,SkinsViewModel,ThemeCard,ThemePreview}.kt</code>, <code>ui/theme/CanhAmpTheme.kt</code></td>
+<td>DS skins. Implements B67 and B68, plus the <code>visAnimated</code> part of B26. Apply recomposes the whole app instantly, and the choice persists across restart. Filter chips work. <code>SkinsViewModelTest</code> covers apply and filter.</td>
+<td>T20</td>
+</tr>
+<tr>
+<td>T22</td>
+<td>Accessibility, storage bar and polish</td>
+<td><code>ui/**</code>, <code>ui/library/StorageBar.kt</code></td>
+<td>B12 storage bar. B70: semantics on every control; font scale 1.3 does not clip the Main deck (screenshot check with the Compose preview <code>fontScale = 1.3f</code>); reduced motion; <code>JankStats</code> logging in debug. The Accessibility Scanner on the 5 screens shows no touch-target or label findings (owner, manual). APK ≤ 15 MB.</td>
+<td>T21, T16, T15</td>
+</tr>
+<tr>
+<td>T23</td>
+<td>v0.1.0 release</td>
+<td><code>docs/reports/device-check-2026-xx-xx.md</code>, <code>docs/tracking.md</code></td>
+<td>The owner runs the device checklist on a CI artifact: 60 min background (G1), scan of 2,000 tracks ≤ 5 s (G2), cold start ≤ 1.5 s (G6), call interruption, Bluetooth buttons, an M3U opened in another player, and the EQ test tone (G4). All pass. Then the owner dispatches <code>release.yml</code> with <code>0.1.0</code>; release <code>v0.1.0</code> exists with the signed APK.</td>
+<td>T22</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Parallelism:</strong> T14 and T17 depend only on T1 and can run alongside M2. T16 can run alongside M3. Everything else is sequential, as above.</p>
+<h2 id="risks">Risks<a class="headerlink" href="#risks" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Check that catches it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The Media3 version in the reference catalog's Kotlin/AGP range has a different <code>AudioProcessor</code> / <code>RenderersFactory</code> API from the one the spec assumes</td>
+<td>T1 pins the version; T18's wiring compiles against it; T17 tests the processors on the JVM through the Media3 <code>BaseAudioProcessor</code></td>
+</tr>
+<tr>
+<td>Processors silently bypassed (offload or float output) so the EQ has no effect</td>
+<td>ADR-0001 keeps both off. T18 manual audible check; T20 bars react to EQ changes (the tap sits after the EQ)</td>
+</tr>
+<tr>
+<td>Android 14 foreground service crash (missing <code>foregroundServiceType</code> or permission)</td>
+<td>T9 manifest review and a manual start of playback on an Android 14+ device; <code>check-forbidden.sh</code> checks the permission list</td>
+</tr>
+<tr>
+<td>Debug keystore secrets not set, so each CI APK cannot install over the last one</td>
+<td>T2 writes a warning in the job summary. The owner sets the secrets before T9 (ADR-0004)</td>
+</tr>
+<tr>
+<td>MediaStore scan slow or incomplete on OEM phones</td>
+<td>T7 logs counts and ms. G2 is measured in T23. SAF import (T16) covers missed folders</td>
+</tr>
+<tr>
+<td>DSP CPU or jank on low-end phones</td>
+<td>T17 perf test; T20 analyser only while subscribed; T22 JankStats</td>
+</tr>
+<tr>
+<td>Trademark text sneaks in from the mockup HTML</td>
+<td><code>check-forbidden.sh</code> in CI from T2 on</td>
+</tr>
+<tr>
+<td>Room schema change after the owner has data</td>
+<td>ADR-0003: migration plus test for every bump; no destructive fallback except <code>tracks</code></td>
+</tr>
+<tr>
+<td>Tasks over 400 lines (T10, T13, T19 are large)</td>
+<td>Builders split them into a/b commits where needed; each commit stays green</td>
+</tr>
+</tbody>
+</table>
+<h2 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Gates per commit:</strong> <code>./gradlew testDebugUnitTest lintDebug --no-daemon</code> (<code>sdlc.config.json</code> component <code>android</code>, added in T1). Plus <code>assembleDebug</code> and <code>scripts/ci/check-forbidden.sh</code> before push.</li>
+<li><strong>CI:</strong> <code>build.yml</code> green on every push to <code>main</code>, with the APK artifact attached.</li>
+<li><strong>Unit tests:</strong> the classes named in each task's acceptance criteria. The DSP and M3U tests carry the PRD acceptance numbers (R19, R20, R23, R18).</li>
+<li><strong>Instrumented (manual run):</strong> DAO and migration tests (T6), and Compose navigation tests (T5/T19).</li>
+<li><strong>Owner manual checks:</strong> after T9 (notification, unplug), T12 (restore), T18 (EQ audible), T20 (bars), T23 (full device checklist and release).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.highlight", "search.suggest", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/diagram-zoom.js"></script>
+      
+    
+  </body>
+</html>
