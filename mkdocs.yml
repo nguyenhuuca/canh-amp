@@ -1,0 +1,99 @@
+site_name: Canh Amp - Docs
+site_description: Product, design and architecture docs for Canh Amp, a retro local music player for Android
+site_author: nguyenhuuca
+repo_url: https://github.com/nguyenhuuca/canh-amp
+repo_name: nguyenhuuca/canh-amp
+edit_uri: edit/main/docs/
+
+# docs are written for GitHub (2-space nested lists, no blank line before a list); see the hook
+hooks:
+  - scripts/mkdocs_hooks.py
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.action.edit
+  palette:
+    - scheme: default
+      primary: deep orange
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep orange
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
+  - javascripts/diagram-zoom.js
+
+extra_css:
+  - stylesheets/diagram-zoom.css
+
+nav:
+  - Home: index.md
+  - Feature Tracking: tracking.md
+
+  - ADR:
+      - 0001 - Audio DSP Pipeline: adr/0001-audio-dsp-pipeline.md
+      - 0002 - Visualizer PCM Tap: adr/0002-visualizer-pcm-tap.md
+      - 0003 - Room + DataStore Persistence: adr/0003-persistence-room-datastore.md
+      - 0004 - App Id, SDK & CI Signing: adr/0004-app-id-sdk-and-ci-signing.md
+
+  - PRD:
+      - Retro Player: prd/PRD-retro-player.md
+
+  - Specs:
+      - Retro Player: specs/spec-retro-player.md
+      - Design Specs:
+          - App Shell: specs/design-spec-app-shell.md
+          - Main Player: specs/design-spec-main-player.md
+          - Equalizer: specs/design-spec-equalizer.md
+          - Playlist: specs/design-spec-playlist.md
+          - Library: specs/design-spec-library.md
+          - Skins: specs/design-spec-skins.md
+          - Settings: specs/design-spec-settings.md
+
+  - Design:
+      - Stitch Screens: design/stitch/README.md
+
+  - Sequence Diagrams:
+      - Retro Player: sequence/sequence-retro-player.md
+
+  - Plans:
+      - Retro Player: plans/plan-retro-player.md
+
+  - Reports:
+      - Device Check 2026-11-19: reports/device-check-2026-11-19.md

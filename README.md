@@ -5,6 +5,7 @@ Canh Amp is a retro rack-mount style local music player for Android. It plays au
 - Product requirements: [docs/prd](docs/prd)
 - Specs: [docs/specs](docs/specs)
 - Decisions: [docs/adr](docs/adr)
+- Docs site (MkDocs): https://nguyenhuuca.github.io/canh-amp/ — run `mkdocs serve` locally
 
 ## Build
 
