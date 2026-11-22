@@ -4,16 +4,25 @@ The project's chosen technologies. Suggest an alternative only when the owner as
 
 The installer fills the sections below from the stack packs it detected (`npx github:nguyenhuuca/agentic-sdlc init`). The owner confirms them with `/welcome`, which the first session offers; edit them freely afterwards: `update` never overwrites a file you changed.
 
-<!-- sdlc:status unconfirmed -->
+<!-- sdlc:status confirmed 2026-11-22 -->
 
 ## Stack
 
 <!-- sdlc:stack -->
-_Not filled yet. List language, framework, build tool, test framework, database and deployment, one row each._
+| Area | Choice |
+|------|--------|
+| Language | Kotlin 2.0.21 |
+| Platform / build | Android (compileSdk 35, minSdk 26), AGP 8.5.2, Gradle Kotlin DSL + version catalog |
+| UI | Jetpack Compose (BOM 2024.09) + Material3, Navigation Compose |
+| Playback | Media3 ExoPlayer + Session 1.4.1 |
+| Storage | Room 2.6.1 (exported schemas in `app/schemas/`), DataStore Preferences |
+| Tests | JUnit 4, Mockito 5, kotlinx-coroutines-test |
+| CI / release | GitHub Actions (`build.yml`, `release.yml` → GitHub Release APK) |
 <!-- /sdlc:stack -->
 
 ## Not Allowed
 
 <!-- sdlc:prohibited -->
-_List patterns this project rejects, with the reason or ADR, for example "No ORM auto-DDL: use migrations (ADR-0003)"._
+- No destructive Room migration: every schema change ships a `Migration` and an exported schema JSON; never `fallbackToDestructiveMigration`.
+- No second playback library: audio goes through Media3 only.
 <!-- /sdlc:prohibited -->
