@@ -2,6 +2,15 @@
 
 Canh Amp is a retro rack-mount style local music player for Android. It plays audio files stored on the device, with an original name and branding.
 
+## Screenshots
+
+<p align="center">
+  <img src="images/screenshots/main-pure-minimal.jpg" alt="Main player, Pure Minimal mode" width="240">
+  <img src="images/screenshots/main-pro-deck.jpg" alt="Main player, Pro Deck mode" width="240">
+  <img src="images/screenshots/playlist.jpg" alt="Playlist queue" width="240">
+</p>
+<p align="center"><em>Main player (Pure Minimal) · Main player (Pro Deck) · Playlist queue</em></p>
+
 ## Where to start
 
 | Section | What it holds |
