@@ -42,6 +42,32 @@ class TrackDaoTest {
         assertNotNull(dao.findByUri("content://2"))
     }
 
+    @Test fun rescanKeepsLearnedSampleRate() = runBlocking {
+        val dao = db.trackDao()
+        dao.upsertByUri(listOf(track("content://1")))
+        val id = dao.findByUri("content://1")!!.id
+        dao.updateSampleRate(id, 48_000)
+        dao.upsertByUri(listOf(track("content://1", title = "rescanned", gen = 2)))
+        val row = dao.findByUri("content://1")!!
+        assertEquals("rescanned", row.title)
+        assertEquals(48_000, row.sampleRateHz)
+    }
+
+    @Test fun updateKeepingLearnedKeepsSampleRateAndSkipsDeletedRows() = runBlocking {
+        val dao = db.trackDao()
+        dao.upsertByUri(listOf(track("saf://keep", "SAF", gen = 2), track("saf://gone", "SAF", gen = 1)))
+        val keep = dao.findByUri("saf://keep")!!
+        val gone = dao.findByUri("saf://gone")!!
+        // tag pass snapshot taken before playback learned the rate and before the row was removed
+        dao.updateSampleRate(keep.id, 44_100)
+        dao.deleteStale("SAF", 2)
+        dao.updateKeepingLearned(listOf(keep.copy(title = "tagged"), gone.copy(title = "back?")))
+        val row = dao.findByUri("saf://keep")!!
+        assertEquals("tagged", row.title)
+        assertEquals(44_100, row.sampleRateHz)
+        assertNull(dao.findByUri("saf://gone"))
+    }
+
     @Test fun deleteStaleOnlyOlderGenerationOfGivenSource() = runBlocking {
         val dao = db.trackDao()
         dao.upsertByUri(

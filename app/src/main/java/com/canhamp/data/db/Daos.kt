@@ -22,22 +22,29 @@ interface TrackDao {
     @Update
     suspend fun update(tracks: List<TrackEntity>)
 
-    @Query("SELECT id FROM tracks WHERE uri = :uri")
-    suspend fun idForUri(uri: String): Long?
-
-    /** Inserts new rows; rows whose uri already exists are updated in place and keep their id. Returns how many rows were newly inserted. */
+    /**
+     * Inserts new rows; rows whose uri already exists are updated in place, keep their id and keep what
+     * playback learned ([TrackMerge.keepLearned]). Returns how many rows were newly inserted.
+     */
     @Transaction
     suspend fun upsertByUri(tracks: List<TrackEntity>): Int {
         val results = insertIgnore(tracks)
         val toUpdate = ArrayList<TrackEntity>()
         for ((i, rowId) in results.withIndex()) {
             if (rowId == -1L) {
-                val id = idForUri(tracks[i].uri) ?: continue
-                toUpdate.add(tracks[i].copy(id = id))
+                val current = findByUri(tracks[i].uri) ?: continue
+                toUpdate.add(TrackMerge.keepLearned(current, tracks[i]))
             }
         }
         if (toUpdate.isNotEmpty()) update(toUpdate)
         return tracks.size - toUpdate.size
+    }
+
+    /** Updates rows that still exist, merged over their current values ([TrackMerge.keepLearned]); deleted rows stay deleted. */
+    @Transaction
+    suspend fun updateKeepingLearned(tracks: List<TrackEntity>) {
+        val merged = tracks.mapNotNull { incoming -> findById(incoming.id)?.let { TrackMerge.keepLearned(it, incoming) } }
+        if (merged.isNotEmpty()) update(merged)
     }
 
     @Query("SELECT COUNT(*) FROM tracks WHERE source = :source")

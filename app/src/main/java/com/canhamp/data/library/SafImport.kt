@@ -54,7 +54,7 @@ class DaoSafStore(private val folders: SafFolderDao, private val tracks: TrackDa
     override suspend fun insertFolder(folder: SafFolderEntity) = folders.insert(folder)
     override suspend fun folders() = folders.allOnce()
     override suspend fun tracksOf(folderId: Long) = tracks.tracksOfSafFolder(folderId)
-    override suspend fun updateTracks(tracks: List<TrackEntity>) = this.tracks.update(tracks)
+    override suspend fun updateTracks(tracks: List<TrackEntity>) = this.tracks.updateKeepingLearned(tracks)
     override suspend fun removeFolder(folderId: Long) {
         tracks.deleteBySafFolder(folderId)
         folders.delete(folderId)
