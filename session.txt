@@ -1,7 +1,7 @@
 task: Review fixes - keep learned sample rate, disable backup
 status: in_progress
-progress: 90
-done: R-1 keep sampleRateHz on rescan/enrich b2dd559; R-2 backup off 0bc0673
-next: owner approves push; run TrackDaoTest on a device
+progress: 95
+done: R-1 keep sampleRateHz on rescan/enrich b2dd559; R-2 backup off 0bc0673; release notes 0.3.3
+next: Release workflow v0.3.3; owner checks on device + runs TrackDaoTest
 plan: -
-updated: 2026-11-23 07:32
+updated: 2026-11-23 20:53

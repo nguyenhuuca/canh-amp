@@ -1,3 +1,7 @@
+## 0.3.3 — 2026-11-23
+- Sửa lỗi: sample rate app đã ghi nhận cho từng bài không còn bị mất khi quét lại thư viện hoặc đọc tag
+- Riêng tư: thư viện, hàng đợi và cài đặt không còn được đưa vào bản sao lưu Android hay khi chuyển sang máy mới
+
 ## 0.3.2 — 2026-11-20
 - Sửa lỗi: khi tắt visualizer chuyển động, phổ đứng yên hoàn toàn (trước đây chấm đỉnh vẫn nhảy) và bộ phân tích ngừng chạy
 

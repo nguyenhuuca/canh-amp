@@ -1,3 +1,7 @@
+## 0.3.3 — 2026-11-23
+- Fix: the sample rate the player learned for a track is no longer lost when the library is rescanned or tags are read
+- Privacy: the library, queue and settings are no longer included in Android backup or device transfer
+
 ## 0.3.2 — 2026-11-20
 - Fix: with the animated visualizer off, the spectrum now stays still (the peak dots kept moving) and the analyser stops
 
