@@ -15,9 +15,11 @@ The installer fills the sections below from the stack packs it detected (`npx gi
 | Platform / build | Android (compileSdk 35, minSdk 26), AGP 8.5.2, Gradle Kotlin DSL + version catalog |
 | UI | Jetpack Compose (BOM 2024.09) + Material3, Navigation Compose |
 | Playback | Media3 ExoPlayer + Session 1.4.1 |
-| Storage | Room 2.6.1 (exported schemas in `app/schemas/`), DataStore Preferences |
+| Storage | Room 2.6.1 (exported schemas in `app/schemas/`, KSP), DataStore Preferences |
+| Lists | Paging 3.3.2 (Room paging source), Reorderable 2.4.0 (drag to reorder) |
 | Tests | JUnit 4, Mockito 5, kotlinx-coroutines-test |
 | CI / release | GitHub Actions (`build.yml`, `release.yml` → GitHub Release APK) |
+| Docs | MkDocs Material 9.7.6 (`docs/requirements.txt`) → GitHub Pages via `docs.yml` (ADR-0005) |
 <!-- /sdlc:stack -->
 
 ## Not Allowed

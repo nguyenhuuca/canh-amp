@@ -56,7 +56,7 @@ markdown_extensions:
       permalink: true
 
 extra_javascript:
-  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
+  - https://unpkg.com/mermaid@11.17.2/dist/mermaid.min.js  # pinned; third-party fetch recorded in ADR-0005
   - javascripts/diagram-zoom.js
 
 extra_css:
@@ -71,6 +71,7 @@ nav:
       - 0002 - Visualizer PCM Tap: adr/0002-visualizer-pcm-tap.md
       - 0003 - Room + DataStore Persistence: adr/0003-persistence-room-datastore.md
       - 0004 - App Id, SDK & CI Signing: adr/0004-app-id-sdk-and-ci-signing.md
+      - 0005 - Docs Site on GitHub Pages: adr/0005-docs-site-github-pages.md
 
   - PRD:
       - Retro Player: prd/PRD-retro-player.md
