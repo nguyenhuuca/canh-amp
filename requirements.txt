@@ -1,0 +1,2 @@
+# Docs site toolchain, pinned. Used by .github/workflows/docs.yml (ADR-0005).
+mkdocs-material==9.7.6
